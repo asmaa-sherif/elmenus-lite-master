@@ -15,8 +15,8 @@ public class Menu {
     private Long menuId;
 
     @ManyToOne
-    @JoinColumn(name = "resturant_id")
-    private Restaurant resturant;
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
     @Column(name = "menu_name")
     private String menuName;
