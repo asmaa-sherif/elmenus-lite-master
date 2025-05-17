@@ -18,6 +18,9 @@ public class MenuItem {
     @JoinColumn(name = "menu_id")
     private Menu menu;
 
+    @Column(name = "item_name")
+    private String itemName;
+
     @Column(name = "price")
     private Double price;
 

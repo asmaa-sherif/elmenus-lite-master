@@ -1,25 +1,21 @@
 package spring.practice.elmenus_lite.service;
 
-import org.springframework.stereotype.Service;
-import spring.practice.elmenus_lite.entity.Menu;
-import spring.practice.elmenus_lite.repository.MenuRepository;
+import spring.practice.elmenus_lite.dto.MenuRequestDto;
+import spring.practice.elmenus_lite.dto.MenuResponseDto;
 
 import java.util.List;
 
-@Service
-public class MenuService {
+public interface MenuService {
 
-    private final MenuRepository menuRepository;
+    MenuResponseDto createMenu(MenuRequestDto menuRequest);
 
-    public MenuService(MenuRepository menuRepository) {
-        this.menuRepository = menuRepository;
-    }
+    MenuResponseDto getMenuById(Long id);
 
-    public List<Menu> getMenusByRestaurantId(Long restaurantId) {
-        return menuRepository.findByRestaurantRestaurantId(restaurantId);
-    }
+    List<MenuResponseDto> getAllMenus();
 
-    public Menu saveMenu(Menu menu) {
-        return menuRepository.save(menu);
-    }
+    MenuResponseDto updateMenu(Long id, MenuRequestDto menuRequest);
+
+    void deleteMenu(Long id);
+
+    List<MenuResponseDto> getMenusByRestaurantId(Long restaurantId);
 }

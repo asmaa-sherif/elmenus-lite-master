@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RestaurantResponseDto {
+public class MenuResponseDto {
+    private Long menuId;
     private Long restaurantId;
-    private String restaurantName;
-    private boolean active;
+    private String menuName;
 }
