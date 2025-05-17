@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="022" author="t0khyo">
+        <createTable tableName="orders">
+            <column name="order_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="customer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="address_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="promotion_id" type="INT"/>
+
+            <column name="discount_amount" type="NUMERIC(10,2)"/>
+
+            <column name="subtotal" type="NUMERIC(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="total" type="NUMERIC(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_date" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="orders"
+                baseColumnNames="customer_id"
+                constraintName="fk_orders_customer"
+                referencedTableName="customer"
+                referencedColumnNames="customer_id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="orders"
+                baseColumnNames="address_id"
+                constraintName="fk_orders_address"
+                referencedTableName="address"
+                referencedColumnNames="address_id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="orders"
+                baseColumnNames="order_status_id"
+                constraintName="fk_orders_order_status"
+                referencedTableName="order_status"
+                referencedColumnNames="order_status_id"
+        />
+    </changeSet>
+</databaseChangeLog>

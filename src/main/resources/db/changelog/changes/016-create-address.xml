@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="016" author="t0khyo">
+        <createTable tableName="address">
+            <column name="address_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="customer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="label" type="VARCHAR(50)"/>
+
+            <column name="street" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="city" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="floor" type="VARCHAR(50)"/>
+
+            <column name="apartment" type="VARCHAR(50)"/>
+
+            <column name="additional_direction" type="TEXT"/>
+
+            <column name="state" type="VARCHAR(50)"/>
+
+            <column name="country" type="VARCHAR(50)"/>
+
+            <column name="zip_code" type="VARCHAR(10)"/>
+
+            <column name="is_default" type="BOOLEAN" defaultValue="false"/>
+
+            <column name="location" type="GEOGRAPHY(Point,4326)"/>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="address"
+                baseColumnNames="customer_id"
+                constraintName="fk_address_customer"
+                referencedTableName="customer"
+                referencedColumnNames="customer_id"
+        />
+    </changeSet>
+</databaseChangeLog>

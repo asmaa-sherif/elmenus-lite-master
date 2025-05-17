@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="027" author="t0khyo">
+        <createTable tableName="review">
+            <column name="review_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="restaurant_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="customer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rating" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comment" type="TEXT"/>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="review"
+                baseColumnNames="restaurant_id"
+                constraintName="fk_review_restaurant"
+                referencedTableName="restaurant"
+                referencedColumnNames="restaurant_id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="review"
+                baseColumnNames="customer_id"
+                constraintName="fk_review_customer"
+                referencedTableName="customer"
+                referencedColumnNames="customer_id"
+        />
+
+        <sql>
+            ALTER TABLE review
+            ADD CONSTRAINT chk_review_rating CHECK (rating BETWEEN 1 AND 5);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

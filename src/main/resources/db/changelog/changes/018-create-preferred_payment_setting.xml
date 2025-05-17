@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="018" author="t0khyo">
+        <createTable tableName="preferred_payment_setting">
+            <column name="preferred_payment_setting" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="customer_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_type_config_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="preferred_payment_setting"
+                baseColumnNames="customer_id"
+                constraintName="pk_preferred_payment_setting_customer"
+                referencedTableName="customer"
+                referencedColumnNames="customer_id"
+                onDelete="CASCADE"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="preferred_payment_setting"
+                baseColumnNames="payment_type_config_id"
+                constraintName="pk_preferred_payment_setting_payment_type_config"
+                referencedTableName="payment_type_config"
+                referencedColumnNames="payment_type_config_id"
+        />
+    </changeSet>
+</databaseChangeLog>

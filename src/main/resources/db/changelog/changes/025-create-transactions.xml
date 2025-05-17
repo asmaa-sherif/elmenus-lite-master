@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="025" author="t0khyo">
+        <createTable tableName="transactions">
+            <column name="transaction_id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_method_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="transaction_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="amount" type="NUMERIC(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="transaction_date" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="order_id"
+                constraintName="fk_transactions_order"
+                referencedTableName="orders"
+                referencedColumnNames="order_id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="payment_method_id"
+                constraintName="fk_transactions_payment_method"
+                referencedTableName="payment_method"
+                referencedColumnNames="payment_method_id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="transaction_status_id"
+                constraintName="fk_transactions_transaction_status"
+                referencedTableName="transaction_status"
+                referencedColumnNames="transaction_status_id"
+        />
+    </changeSet>
+</databaseChangeLog>

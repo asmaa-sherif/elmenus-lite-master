@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="010" author="t0khyo">
+        <createTable tableName="customer">
+            <column name="customer_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="user_id" type="INT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="phone" type="VARCHAR(15)"/>
+
+            <!--  Gender codes based on ISO/IEC 5218: 0=Unspecified, 1=Male, 2=Female  -->
+            <column name="gender" type="SMALLINT"/>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS: Primary Key & Foreign Keys === -->
+        <addForeignKeyConstraint
+                baseTableName="customer"
+                baseColumnNames="user_id"
+                constraintName="fk_customer_user"
+                referencedTableName="users"
+                referencedColumnNames="user_id"
+        />
+    </changeSet>
+</databaseChangeLog>

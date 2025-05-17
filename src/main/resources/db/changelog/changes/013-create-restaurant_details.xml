@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="013" author="t0khyo">
+        <createTable tableName="restaurant_details">
+            <column name="restaurant_details_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="restaurant_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="TEXT"/>
+
+            <column name="phone" type="VARCHAR(15)"/>
+
+            <column name="estimated_delivery_time" type="INTERVAL"/>
+
+            <column name="open_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="close_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="location" type="GEOGRAPHY(Point,4326)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="restaurant_details"
+                baseColumnNames="restaurant_id"
+                constraintName="fk_restaurant_details_restaurant"
+                referencedTableName="restaurant"
+                referencedColumnNames="restaurant_id"
+                onDelete="CASCADE"
+        />
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="db/changelog/changes/000-setup.xml"/>
+
+    <include file="db/changelog/changes/001-create-roles.xml"/>
+    <include file="db/changelog/changes/002-create-user_type.xml"/>
+    <include file="db/changelog/changes/003-create-payment_integration_type.xml"/>
+    <include file="db/changelog/changes/004-create-order_status.xml"/>
+    <include file="db/changelog/changes/005-create-transaction_status.xml"/>
+    <include file="db/changelog/changes/006-create-payment_method.xml"/>
+    <include file="db/changelog/changes/007-create-category.xml"/>
+
+    <include file="db/changelog/changes/008-create-users.xml"/>
+    <include file="db/changelog/changes/009-create-user_role.xml"/>
+    <include file="db/changelog/changes/010-create-customer.xml"/>
+
+    <include file="db/changelog/changes/011-create-restaurant.xml"/>
+    <include file="db/changelog/changes/012-create-restaurant_category.xml"/>
+    <include file="db/changelog/changes/013-create-restaurant_details.xml"/>
+    <include file="db/changelog/changes/014-create-menu.xml"/>
+    <include file="db/changelog/changes/015-create-menu_item.xml"/>
+
+    <include file="db/changelog/changes/016-create-address.xml"/>
+    <include file="db/changelog/changes/017-create-payment_type_config.xml"/>
+    <include file="db/changelog/changes/018-create-preferred_payment_setting.xml"/>
+    <include file="db/changelog/changes/019-create-cart.xml"/>
+    <include file="db/changelog/changes/020-create-cart_item.xml"/>
+
+    <include file="db/changelog/changes/021-create-promotion.xml"/>
+    <include file="db/changelog/changes/022-create-orders.xml"/>
+    <include file="db/changelog/changes/023-create-order_item.xml"/>
+    <include file="db/changelog/changes/024-create-order_tracking.xml"/>
+    <include file="db/changelog/changes/025-create-transactions.xml"/>
+    <include file="db/changelog/changes/026-create-transaction_details.xml"/>
+
+    <include file="db/changelog/changes/027-create-review.xml"/>
+    <include file="db/changelog/changes/028-create-audit_type.xml"/>
+    <include file="db/changelog/changes/029-create-auditing.xml"/>
+
+</databaseChangeLog>

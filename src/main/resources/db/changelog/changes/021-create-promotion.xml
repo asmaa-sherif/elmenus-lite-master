@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="021" author="t0khyo">
+        <createTable tableName="promotion">
+            <column name="promotion_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="promotion_name" type="VARCHAR(100)"/>
+
+            <column name="discount_percent" type="NUMERIC(5,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="max_discount" type="NUMERIC(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="start_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="end_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <sql>
+            ALTER TABLE promotion
+            ADD CONSTRAINT chk_promotion_discount_percent CHECK (discount_percent > 0 AND discount_percent &lt;= 100);
+        </sql>
+
+        <sql>
+            ALTER TABLE promotion
+            ADD CONSTRAINT chk_promotion_max_discount_positive CHECK (max_discount > 0);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

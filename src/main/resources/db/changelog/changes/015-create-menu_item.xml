@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="015" author="t0khyo">
+        <createTable tableName="menu_item">
+            <column name="menu_item_id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="menu_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="menu_item_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price" type="NUMERIC(10,2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="available" type="BOOLEAN" defaultValue="TRUE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- === CONSTRAINTS === -->
+        <addForeignKeyConstraint
+                baseTableName="menu_item"
+                baseColumnNames="menu_id"
+                constraintName="fk_menu_item_menu"
+                referencedTableName="menu"
+                referencedColumnNames="menu_id"
+                onDelete="CASCADE"
+        />
+
+        <sql>
+            ALTER TABLE menu_item
+            ADD CONSTRAINT chk_menu_item_price_positive CHECK (price > 0);
+        </sql>
+
+    </changeSet>
+</databaseChangeLog>
