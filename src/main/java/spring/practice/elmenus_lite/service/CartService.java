@@ -21,7 +21,7 @@ public class CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        List<CartItemResponseDto> items = cart.getCartItems().stream().map(item -> {
+       /* List<CartItemResponseDto> items = cart.getCartItems().stream().map(item -> {
             CartItemResponseDto dto = new CartItemResponseDto();
             dto.setProductName(item.getMenuItem().getMenuName()); // Assuming menuName exists
             dto.setPrice(item.getMenuItem().getPrice());
@@ -30,11 +30,11 @@ public class CartService {
             return dto;
         }).toList();
 
-        double total = items.stream().mapToDouble(CartItemResponseDto::getTotal).sum();
+        double total = items.stream().mapToDouble(CartItemResponseDto::getTotal).sum();*/
 
         CartResponseDto response = new CartResponseDto();
-        response.setCustomerId(cart.getCustomer().getCustomerId());
-        response.setCustomerName(cart.getCustomer().getFullName());
+       /* response.setCustomerId(cart.getCustomer().getCustomerId());
+        response.setCustomerName(cart.getCustomer().getFullName());*/
 
         return response;
     }

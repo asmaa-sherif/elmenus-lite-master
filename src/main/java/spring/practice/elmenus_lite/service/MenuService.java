@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class MenuService {
 
-    private final MenuRepository menuRepository;
+   /* private final MenuRepository menuRepository;
 
     public MenuService(MenuRepository menuRepository) {
         this.menuRepository = menuRepository;
@@ -21,5 +21,5 @@ public class MenuService {
 
     public Menu saveMenu(Menu menu) {
         return menuRepository.save(menu);
-    }
+    }*/
 }

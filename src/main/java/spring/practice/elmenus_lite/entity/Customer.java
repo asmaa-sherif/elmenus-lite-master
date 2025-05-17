@@ -32,6 +32,6 @@ public class Customer {
     }
 
     public String getFullName() {
-        return user.getFirstName() + " " + user.getLastName();
+        return user.getFullName();
     }
 }

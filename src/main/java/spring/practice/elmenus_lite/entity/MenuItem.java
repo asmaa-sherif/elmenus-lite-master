@@ -24,8 +24,8 @@ public class MenuItem {
     @Column(name = "available")
     private boolean available;
 
-    public String getMenuName() {
+    /*public String getMenuName() {
         return menu.getMenuName();
-    }
+    }*/
 }
 
