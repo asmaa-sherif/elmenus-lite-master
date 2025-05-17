@@ -8,7 +8,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import spring.practice.elmenus_lite.repository.CartRepository;
 
 @SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+// Removed @EnableJpaAuditing to avoid requiring an auditorProvider bean.
+// Auditing is not currently used in this project (e.g., @CreatedBy/@LastModifiedBy).
+// Re-enable if auditing features are introduced and a proper AuditorAware implementation is provided.
+
+//@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class ElmenusLiteApplication {
 
 	public static void main(String[] args) {
