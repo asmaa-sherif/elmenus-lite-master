@@ -3,16 +3,18 @@ package spring.practice.elmenus_lite.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "users")
+public class User extends AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,14 +38,14 @@ public class User {
     @NotBlank
     private String password;
 
-    @Transient
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
+//    @Transient
+//    public String getFullName() {
+//        return firstName + " " + lastName;
+//    }
 
     @Column(name = "last_login")
     private Instant lastLogin;
 
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
+//    @Column(name = "is_deleted")
+//    private Boolean isDeleted;
 }

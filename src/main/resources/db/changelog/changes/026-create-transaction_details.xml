@@ -9,25 +9,25 @@
     <changeSet id="026" author="t0khyo">
         <createTable tableName="transaction_details">
             <column name="transaction_id" type="UUID">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="details" type="TEXT"/>
 
             <column name="created_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
 

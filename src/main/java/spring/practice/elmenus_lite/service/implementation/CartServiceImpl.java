@@ -70,7 +70,7 @@ public class CartServiceImpl implements CartService {
         CartResponseDto dto = new CartResponseDto();
         dto.setCartId(cart.getCartId());
         dto.setCustomerId(cart.getCustomer().getCustomerId());
-        dto.setCustomerName(cart.getCustomer().getUser().getFullName());
+//        dto.setCustomerName(cart.getCustomer().getUser().getFullName());
 
         if (cart.getCartItems() != null) {
             List<CartItemResponseDto> itemDtos = cart.getCartItems().stream().map(item -> {

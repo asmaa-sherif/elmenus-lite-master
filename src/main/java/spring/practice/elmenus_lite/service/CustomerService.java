@@ -1,14 +1,20 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.CustomerResponseDto;
-import spring.practice.elmenus_lite.entity.Customer;
+import spring.practice.elmenus_lite.dto.CustomerDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerService {
-    CustomerResponseDto createCustomer(CustomerResponseDto newCustomer);
-    CustomerResponseDto updateCustomer(Long id , CustomerResponseDto customer);
-    void deleteCustomer(Long id);
-    CustomerResponseDto getCustomer(Long id);
-    List<CustomerResponseDto> getAllCustomers();
+
+    List<CustomerDto> findAll();
+
+    Optional<CustomerDto> findById(Long id);
+
+    CustomerDto add(CustomerDto newCustomer);
+
+    CustomerDto update(Long customerId, CustomerDto newCustomer);
+
+    Boolean delete(Long customerId);
+
 }

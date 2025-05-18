@@ -2,14 +2,16 @@ package spring.practice.elmenus_lite.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "cart_item")
-public class CartItem {
+public class CartItem extends AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +27,10 @@ public class CartItem {
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    public CartItem(Cart cart, MenuItem menuItem, Integer quantity) {
+        this.cart = cart;
+        this.menuItem = menuItem;
+        this.quantity = quantity;
+    }
 }
