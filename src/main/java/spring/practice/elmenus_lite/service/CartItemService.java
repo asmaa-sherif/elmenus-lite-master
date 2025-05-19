@@ -4,7 +4,7 @@ import spring.practice.elmenus_lite.dto.CartItemDto;
 
 //add, delete , update
 public interface CartItemService {
-    CartItemDto addCartItem(CartItemDto cartItemDto);
+    void addCartItem(Long customerId, Long menuItemId, Integer quantity);
 
     CartItemDto getCartItemById(Long id);
 

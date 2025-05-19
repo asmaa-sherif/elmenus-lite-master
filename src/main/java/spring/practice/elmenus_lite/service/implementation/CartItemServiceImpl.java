@@ -3,11 +3,15 @@ package spring.practice.elmenus_lite.service.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
+import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
+import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CartItemMapper;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
+import spring.practice.elmenus_lite.repository.CartRepository;
+import spring.practice.elmenus_lite.repository.CustomerRepository;
 import spring.practice.elmenus_lite.repository.MenuItemRepository;
 import spring.practice.elmenus_lite.service.CartItemService;
 
@@ -16,21 +20,36 @@ public class CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final MenuItemRepository menuItemRepository;
-    private final CartItemMapper cartItemMapper;
+    private final CartRepository cartRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    public CartItemServiceImpl(CartItemRepository cartItemRepository, MenuItemRepository menuItemRepository, CartItemMapper cartItemMapper) {
+    public CartItemServiceImpl(CartItemRepository cartItemRepository, MenuItemRepository menuItemRepository, CartRepository cartRepository, CustomerRepository customerRepository) {
         this.cartItemRepository = cartItemRepository;
         this.menuItemRepository = menuItemRepository;
-        this.cartItemMapper = cartItemMapper;
+        this.cartRepository = cartRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
-    public CartItemDto addCartItem(CartItemDto cartItemDto) {
-        CartItem cartItem = mapToCartItem(cartItemDto);
-        CartItem savedItem = cartItemRepository.save(cartItem);
-        return mapToCartItemResponseDto(savedItem);
+    public void addCartItem(Long customerId, Long menuItemId, Integer quantity) {
+        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
+                .orElseGet(() -> {
+                    Customer customer = customerRepository.findById(customerId)
+                            .orElseThrow(() -> new NotFoundCustomException("Customer not found"));
+                    Cart newCart = new Cart();
+                    newCart.setCustomer(customer);
+                    return cartRepository.save(newCart);
+                });
+
+        MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new NotFoundCustomException("MenuItem not found"));
+
+        CartItem cartItem = new CartItem(cart, menuItem, quantity);
+        cartItemRepository.save(cartItem);
     }
+
+
 
     @Override
     public CartItemDto getCartItemById(Long id) {
