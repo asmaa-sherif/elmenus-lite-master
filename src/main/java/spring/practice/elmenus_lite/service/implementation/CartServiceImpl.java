@@ -1,11 +1,15 @@
 package spring.practice.elmenus_lite.service.implementation;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartDto;
 import spring.practice.elmenus_lite.dto.CartItemDto;
+import spring.practice.elmenus_lite.dto.MenuItemDto;
 import spring.practice.elmenus_lite.entity.Cart;
+import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
+import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CartMapper;
 import spring.practice.elmenus_lite.repository.CartRepository;
@@ -93,9 +97,13 @@ public class CartServiceImpl implements CartService {
             List<CartItemDto> itemDtos = cart.getCartItems().stream().map(item -> {
                 CartItemDto itemDto = new CartItemDto();
                 itemDto.setCartItemId(item.getCartItemId());
-                itemDto.setMenuItemId(item.getMenuItem().getMenuItemId());
+                MenuItemDto menuItem = new MenuItemDto();
+                menuItem.setMenuItemId(item.getMenuItem().getMenuItemId());
+                menuItem.setItemName(item.getMenuItem().getItemName());
+                menuItem.setPrice(item.getMenuItem().getPrice());
+                itemDto.setMenuItem(menuItem);
                 itemDto.setProductName(item.getMenuItem().getItemName());
-                itemDto.setPrice(item.getMenuItem().getPrice());
+//                itemDto.setPrice(item.getMenuItem().getPrice());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setTotal(item.getMenuItem().getPrice() * item.getQuantity());
                 return itemDto;
@@ -114,11 +122,20 @@ public class CartServiceImpl implements CartService {
 
     private Cart mapToEntity(CartDto dto) {
         Cart cart = new Cart();
-
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         cart.setCustomer(customer);
-
+        cart.setCartItems(new ArrayList<>());
+        for (CartItemDto cartItem: dto.getCartItems()){
+            CartItem item = new CartItem();
+            item.setCart(cart);
+            item.setQuantity(cartItem.getQuantity());
+            MenuItem menuItem = new MenuItem();
+            menuItem.setMenuItemId(cartItem.getMenuItem().getMenuItemId());
+            menuItem.setPrice(cartItem.getMenuItem().getPrice());
+            item.setMenuItem(menuItem);
+            cart.getCartItems().add(item);
+        }
 
         return cart;
     }

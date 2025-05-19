@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,35 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/cart")
 public class CartController {
-
     private final CartService cartService;
 
+    @Autowired
     public CartController(CartService cartService) {
         this.cartService = cartService;
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CartDto> getCartById(@PathVariable Long id) {
-        CartDto cart = cartService.getCartById(id);
-        return ResponseEntity.ok(cart);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<CartDto>> getAllCarts() {
-        List<CartDto> carts = cartService.getAllCarts();
-        return ResponseEntity.ok(carts);
-    }
-
-    @PostMapping
-    public ResponseEntity<CartDto> addCart(@RequestBody CartDto cartDto) {
-        CartDto createdCart = cartService.addCart(cartDto);
-        return ResponseEntity.ok(createdCart);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CartDto> updateCart(@PathVariable Long id, @RequestBody CartDto cartDto) {
-        CartDto updatedCart = cartService.updateCart(id, cartDto);
-        return ResponseEntity.ok(updatedCart);
     }
 
     @DeleteMapping("/{id}")
