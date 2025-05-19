@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,31 +14,19 @@ import spring.practice.elmenus_lite.service.CartItemService;
 @RestController
 @RequestMapping("/api/v1/cartItem")
 public class CartItemController {
-
     private final CartItemService cartItemService;
 
+    @Autowired
     public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CartItemDto> getCartItemById(@PathVariable Long id) {
-        CartItemDto item = cartItemService.getCartItemById(id);
-        return ResponseEntity.ok(item);
-    }
-
     @PostMapping
     public ResponseEntity<CartItemDto> addCartItem(@RequestBody CartItemDto itemDto) {
+        //TODO: return success with no data
         CartItemDto createdItem = cartItemService.addCartItem(itemDto);
         return ResponseEntity.ok(createdItem);
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CartItemDto> updateCartItem(@PathVariable Long id, @RequestBody CartItemDto itemDto) {
-        CartItemDto updatedItem = cartItemService.updateCartItemById(id, itemDto);
-        return ResponseEntity.ok(updatedItem);
-    }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse<CartItemDto>> deleteCartItem(@PathVariable Long id) {

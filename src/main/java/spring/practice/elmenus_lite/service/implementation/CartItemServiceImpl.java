@@ -3,6 +3,7 @@ package spring.practice.elmenus_lite.service.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
+import spring.practice.elmenus_lite.dto.MenuItemDto;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
@@ -27,6 +28,8 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemDto addCartItem(CartItemDto cartItemDto) {
+        //TODO: check if the cart exist add the item
+        // TODO: else add cart then add item on the cart
         CartItem cartItem = mapToCartItem(cartItemDto);
         CartItem savedItem = cartItemRepository.save(cartItem);
         return mapToCartItemResponseDto(savedItem);
@@ -56,8 +59,8 @@ public class CartItemServiceImpl implements CartItemService {
 
         existingItem.setQuantity(cartItemDto.getQuantity());
 
-        MenuItem menuItem = menuItemRepository.findById(cartItemDto.getMenuItemId())
-                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + cartItemDto.getMenuItemId()));
+        MenuItem menuItem = menuItemRepository.findById(cartItemDto.getMenuItem().getMenuItemId())
+                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + cartItemDto.getMenuItem().getMenuItemId()));
 
         existingItem.setMenuItem(menuItem);
 
@@ -83,7 +86,11 @@ public class CartItemServiceImpl implements CartItemService {
         dto.setPrice(cartItem.getMenuItem().getPrice());
         dto.setQuantity(cartItem.getQuantity());
         dto.setTotal(cartItem.getMenuItem().getPrice() * cartItem.getQuantity());
-        dto.setMenuItemId(cartItem.getMenuItem().getMenuItemId()); // add this field to your DTO!
+        MenuItemDto menuItemDto = new MenuItemDto();
+        menuItemDto.setMenuItemId(cartItem.getMenuItem().getMenuItemId());
+        menuItemDto.setItemName(cartItem.getMenuItem().getItemName());
+        menuItemDto.setPrice(cartItem.getMenuItem().getPrice());
+        dto.setMenuItem(menuItemDto); // add this field to your DTO!
         return dto;
     }
 
@@ -92,8 +99,8 @@ public class CartItemServiceImpl implements CartItemService {
         CartItem cartItem = new CartItem();
         cartItem.setQuantity(dto.getQuantity());
 
-        MenuItem menuItem = menuItemRepository.findById(dto.getMenuItemId())
-                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + dto.getMenuItemId()));
+        MenuItem menuItem = menuItemRepository.findById(dto.getMenuItem().getMenuItemId())
+                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + dto.getMenuItem().getMenuItemId()));
 
         cartItem.setMenuItem(menuItem);
 
