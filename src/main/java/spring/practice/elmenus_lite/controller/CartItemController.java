@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spring.practice.elmenus_lite.dto.BaseResponse;
-import spring.practice.elmenus_lite.dto.CartDto;
-import spring.practice.elmenus_lite.dto.CartItemDto;
-import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequestBody;
+import spring.practice.elmenus_lite.dto.*;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CartItemService;
 
@@ -22,10 +19,24 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<CartItemDto> addCartItem(@RequestBody CartItemDto itemDto) {
-        //TODO: return success with no data
-        CartItemDto createdItem = cartItemService.addCartItem(itemDto);
-        return ResponseEntity.ok(createdItem);
+    public ResponseEntity<BaseResponse<CartItemDto>> addCartItem(@RequestBody AddCartItemRequestDto request) {
+        if (request.getCustomerId() == null || request.getCustomerId() <= 0 ||
+                request.getMenuItemId() == null || request.getMenuItemId() <= 0 ||
+                request.getQuantity() == null || request.getQuantity() <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(new BaseResponse<>(false, "Invalid request data", null));
+        }
+
+        try {
+            cartItemService.addCartItem(request.getCustomerId(), request.getMenuItemId(), request.getQuantity());
+            return ResponseEntity.ok(new BaseResponse<>(true, "Cart item added successfully", null));
+        } catch (NotFoundCustomException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponse<>(false, ex.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse<>(false, e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")

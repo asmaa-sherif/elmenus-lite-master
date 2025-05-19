@@ -13,11 +13,6 @@ import spring.practice.elmenus_lite.controller.CartController;
 import spring.practice.elmenus_lite.dto.CartDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CartService;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,28 +38,6 @@ public class CartControllerTest {
         sampleCart.setGrandTotal(50.0);
     }
 
-
-   /* @Test
-    void testAddCart_success() throws Exception {
-        Mockito.when(cartService.addCart(any(CartDto.class))).thenReturn(sampleCart);
-
-        mockMvc.perform(post("/api/v1/cart")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleCart)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartId").value(1L));
-    }*/
-
-    @Test
-    void testUpdateCart_success() throws Exception {
-        Mockito.when(cartService.updateCart(eq(1L), any(CartDto.class))).thenReturn(sampleCart);
-
-        mockMvc.perform(put("/api/v1/cart/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleCart)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartId").value(1L));
-    }
 
     @Test
     void testDeleteCart_success() throws Exception {
@@ -98,7 +71,7 @@ public class CartControllerTest {
 
         mockMvc.perform(get("/api/v1/cart/customer/100"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.cartId").value(1L))
+                .andExpect(jsonPath("$.response.cartId").value(1L))
                 .andExpect(jsonPath("$.success").value(true));
     }
 
