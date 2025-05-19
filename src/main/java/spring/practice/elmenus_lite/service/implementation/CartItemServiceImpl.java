@@ -40,9 +40,14 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public void deleteCartItemById(Long id) {
+    public Boolean deleteCartItemById(Long id) {
+        if (!this.cartItemRepository.existsById(id)) {
+            throw new NotFoundCustomException("Cart item not found");
+        }
         cartItemRepository.deleteById(id);
+        return true;
     }
+
 
     @Override
     public CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto) {

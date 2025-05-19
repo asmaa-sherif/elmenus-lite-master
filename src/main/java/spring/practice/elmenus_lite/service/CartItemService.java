@@ -8,7 +8,7 @@ public interface CartItemService {
 
     CartItemDto getCartItemById(Long id);
 
-    void deleteCartItemById(Long id);
+    Boolean deleteCartItemById(Long id);
 
     CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto);
 
