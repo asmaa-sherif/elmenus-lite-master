@@ -11,7 +11,7 @@ import spring.practice.elmenus_lite.service.CartService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/carts")
+@RequestMapping("/api/v1/cart")
 public class CartController {
 
     private final CartService cartService;
