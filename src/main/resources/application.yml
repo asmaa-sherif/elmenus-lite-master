@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public
-    username: amel
-    password: amel
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=study
+    username: postgres
+    password: mysecretpassword
     driver-class-name: org.postgresql.Driver
 
   jpa:
