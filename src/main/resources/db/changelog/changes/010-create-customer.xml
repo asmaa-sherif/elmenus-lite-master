@@ -22,19 +22,19 @@
             <column name="gender" type="SMALLINT"/>
 
             <column name="created_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
 

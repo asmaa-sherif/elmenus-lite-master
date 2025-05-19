@@ -13,15 +13,15 @@
             </column>
 
             <column name="customer_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="address_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="order_status_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="promotion_id" type="INT"/>
@@ -29,31 +29,31 @@
             <column name="discount_amount" type="NUMERIC(10,2)"/>
 
             <column name="subtotal" type="NUMERIC(10,2)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="total" type="NUMERIC(10,2)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="order_date" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
 

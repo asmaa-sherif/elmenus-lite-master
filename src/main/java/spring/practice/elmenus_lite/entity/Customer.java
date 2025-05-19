@@ -1,14 +1,17 @@
 package spring.practice.elmenus_lite.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import spring.practice.elmenus_lite.enums.Gender;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "customer")
-public class Customer {
+public class Customer extends AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,15 +24,10 @@ public class Customer {
     @Column(name = "phone")
     private String phone;
 
+
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "gender")
-    private String gender;
-
-    public Customer() {
-    }
-
-    public Customer(Long customerId) {
-        this.customerId = customerId;
-    }
+    private Gender gender;
 
     public String getFullName() {
         return user.getFirstName() + " " + user.getLastName();

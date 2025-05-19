@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_type")
-public class UserType {
+public class UserType extends AbstractEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,4 +18,8 @@ public class UserType {
 
     @Column(name = "user_type_name", nullable = false, unique = true)
     private String userTypeName;
+
+    public UserType(String userTypeName) {
+        this.userTypeName = userTypeName;
+    }
 }

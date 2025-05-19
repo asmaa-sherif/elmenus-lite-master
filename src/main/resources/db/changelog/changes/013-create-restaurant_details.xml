@@ -13,7 +13,7 @@
             </column>
 
             <column name="restaurant_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="description" type="TEXT"/>
@@ -23,31 +23,31 @@
             <column name="estimated_delivery_time" type="INTERVAL"/>
 
             <column name="open_time" type="TIME">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="close_time" type="TIME">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="location" type="GEOGRAPHY(Point,4326)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
 

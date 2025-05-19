@@ -13,17 +13,17 @@
             </column>
 
             <column name="customer_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="label" type="VARCHAR(50)"/>
 
             <column name="street" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="city" type="VARCHAR(50)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="floor" type="VARCHAR(50)"/>
@@ -43,19 +43,19 @@
             <column name="location" type="GEOGRAPHY(Point,4326)"/>
 
             <column name="created_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_at" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
 
