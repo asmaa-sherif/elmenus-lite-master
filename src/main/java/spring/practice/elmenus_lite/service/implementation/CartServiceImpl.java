@@ -1,11 +1,13 @@
 package spring.practice.elmenus_lite.service.implementation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.practice.elmenus_lite.dto.CartItemResponseDto;
-import spring.practice.elmenus_lite.dto.CartResponseDto;
+import spring.practice.elmenus_lite.dto.CartDto;
+import spring.practice.elmenus_lite.dto.CartItemDto;
 import spring.practice.elmenus_lite.entity.Cart;
-import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
+import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
+import spring.practice.elmenus_lite.mapper.CartMapper;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
 import spring.practice.elmenus_lite.service.CartService;
@@ -19,28 +21,31 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final CustomerRepository customerRepository;
+    private final CartMapper cartMapper;
 
-    public CartServiceImpl(CartRepository cartRepository, CustomerRepository customerRepository) {
+    @Autowired
+    public CartServiceImpl(CartRepository cartRepository, CustomerRepository customerRepository, CartMapper cartMapper) {
         this.cartRepository = cartRepository;
         this.customerRepository = customerRepository;
+        this.cartMapper = cartMapper;
     }
 
     @Override
-    public CartResponseDto getCartById(Long id) {
+    public CartDto getCartById(Long id) {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         return mapToDto(cart);
     }
 
     @Override
-    public CartResponseDto addCart(CartResponseDto cartDto) {
+    public CartDto addCart(CartDto cartDto) {
         Cart cart = mapToEntity(cartDto);
         Cart savedCart = cartRepository.save(cart);
         return mapToDto(savedCart);
     }
 
     @Override
-    public CartResponseDto updateCart(Long id, CartResponseDto cartDto) {
+    public CartDto updateCart(Long id, CartDto cartDto) {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
@@ -61,20 +66,29 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartResponseDto> getAllCarts() {
+    public List<CartDto> getAllCarts() {
         List<Cart> carts = cartRepository.findAll();
         return carts.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    private CartResponseDto mapToDto(Cart cart) {
-        CartResponseDto dto = new CartResponseDto();
+    @Override
+    public CartDto getCartByCustomerId(Long customerId) {
+        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
+                .orElseThrow(() -> new NotFoundCustomException("Cart not found"));
+        return mapToDto(cart);
+    }
+
+
+    private CartDto mapToDto(Cart cart) {
+        CartDto dto = new CartDto();
         dto.setCartId(cart.getCartId());
         dto.setCustomerId(cart.getCustomer().getCustomerId());
 //        dto.setCustomerName(cart.getCustomer().getUser().getFullName());
 
         if (cart.getCartItems() != null) {
-            List<CartItemResponseDto> itemDtos = cart.getCartItems().stream().map(item -> {
-                CartItemResponseDto itemDto = new CartItemResponseDto();
+            List<CartItemDto> itemDtos = cart.getCartItems().stream().map(item -> {
+                CartItemDto itemDto = new CartItemDto();
+                itemDto.setCartItemId(item.getCartItemId());
                 itemDto.setProductName(item.getMenuItem().getItemName());
                 itemDto.setPrice(item.getMenuItem().getPrice());
                 itemDto.setQuantity(item.getQuantity());
@@ -82,18 +96,18 @@ public class CartServiceImpl implements CartService {
                 return itemDto;
             }).collect(Collectors.toList());
 
-            dto.setItems(itemDtos);
-            double grandTotal = itemDtos.stream().mapToDouble(CartItemResponseDto::getTotal).sum();
+            dto.setCartItems(itemDtos);
+            double grandTotal = itemDtos.stream().mapToDouble(CartItemDto::getTotal).sum();
             dto.setGrandTotal(grandTotal);
         } else {
-            dto.setItems(new ArrayList<>());
+            dto.setCartItems(new ArrayList<>());
             dto.setGrandTotal(0.0);
         }
 
         return dto;
     }
 
-    private Cart mapToEntity(CartResponseDto dto) {
+    private Cart mapToEntity(CartDto dto) {
         Cart cart = new Cart();
 
         Customer customer = customerRepository.findById(dto.getCustomerId())

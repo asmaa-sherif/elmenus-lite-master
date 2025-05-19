@@ -1,8 +1,11 @@
 package spring.practice.elmenus_lite.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spring.practice.elmenus_lite.dto.CartItemResponseDto;
+import spring.practice.elmenus_lite.dto.BaseResponse;
+import spring.practice.elmenus_lite.dto.CartItemDto;
+import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequestBody;
 import spring.practice.elmenus_lite.service.CartItemService;
 
 @RestController
@@ -16,20 +19,20 @@ public class CartItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartItemResponseDto> getCartItemById(@PathVariable Long id) {
-        CartItemResponseDto item = cartItemService.getCartItemById(id);
+    public ResponseEntity<CartItemDto> getCartItemById(@PathVariable Long id) {
+        CartItemDto item = cartItemService.getCartItemById(id);
         return ResponseEntity.ok(item);
     }
 
     @PostMapping
-    public ResponseEntity<CartItemResponseDto> addCartItem(@RequestBody CartItemResponseDto itemDto) {
-        CartItemResponseDto createdItem = cartItemService.addCartItem(itemDto);
+    public ResponseEntity<CartItemDto> addCartItem(@RequestBody CartItemDto itemDto) {
+        CartItemDto createdItem = cartItemService.addCartItem(itemDto);
         return ResponseEntity.ok(createdItem);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CartItemResponseDto> updateCartItem(@PathVariable Long id, @RequestBody CartItemResponseDto itemDto) {
-        CartItemResponseDto updatedItem = cartItemService.updateCartItemById(id, itemDto);
+    public ResponseEntity<CartItemDto> updateCartItem(@PathVariable Long id, @RequestBody CartItemDto itemDto) {
+        CartItemDto updatedItem = cartItemService.updateCartItemById(id, itemDto);
         return ResponseEntity.ok(updatedItem);
     }
 
@@ -37,5 +40,31 @@ public class CartItemController {
     public ResponseEntity<Void> deleteCartItem(@PathVariable Long id) {
         cartItemService.deleteCartItemById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{cartId}/{cartItemId}/quantity")
+    public ResponseEntity<BaseResponse<CartItemDto>> updateItemQuantity(@PathVariable("cartId") Long cartId,
+                                                                        @PathVariable("cartItemId") Long cartItemId,
+                                                                        @RequestBody UpdateItemQuantityRequestBody quantity) {
+        if (quantity == null || quantity.getQuantity() <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid quantity", null));
+        }
+
+        if (cartItemId == null || cartItemId <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid cart item ID", null));
+        }
+
+        if (cartId == null || cartId <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid cart ID", null));
+        }
+
+        CartItemDto updatedItem = cartItemService.updateCartItemQuantity(cartId, cartItemId, quantity.getQuantity());
+
+        if (updatedItem == null || updatedItem.getCartItemId() == null) {
+            return ResponseEntity.internalServerError().body(new BaseResponse<>(false, "can not update quantity", null));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(true, "Quantity updated successfully", updatedItem));
+
     }
 }
