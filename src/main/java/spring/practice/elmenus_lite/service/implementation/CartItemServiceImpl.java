@@ -62,7 +62,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemDto updateCartItemQuantity(Long cartId, Long cartItemId, Integer quantity) {
-        CartItem cartItem = cartItemRepository.findByCartItemIdAndCartCartId(cartId, cartItemId)
+        CartItem cartItem = cartItemRepository.findByCartItemIdAndCartCartId(cartItemId, cartId)
                 .orElseThrow(() -> new NotFoundCustomException("Cart Item with id: " + cartItemId + " not found in this cart " + cartId));
         cartItem.setQuantity(quantity);
         CartItem updatedItem = cartItemRepository.save(cartItem);
