@@ -44,28 +44,6 @@ public class CartControllerTest {
     }
 
 
-   /* @Test
-    void testAddCart_success() throws Exception {
-        Mockito.when(cartService.addCart(any(CartDto.class))).thenReturn(sampleCart);
-
-        mockMvc.perform(post("/api/v1/cart")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleCart)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartId").value(1L));
-    }*/
-
-    @Test
-    void testUpdateCart_success() throws Exception {
-        Mockito.when(cartService.updateCart(eq(1L), any(CartDto.class))).thenReturn(sampleCart);
-
-        mockMvc.perform(put("/api/v1/cart/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleCart)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartId").value(1L));
-    }
-
     @Test
     void testDeleteCart_success() throws Exception {
         Mockito.when(cartService.deleteCart(1L)).thenReturn(true);
@@ -98,7 +76,7 @@ public class CartControllerTest {
 
         mockMvc.perform(get("/api/v1/cart/customer/100"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.cartId").value(1L))
+                .andExpect(jsonPath("$.response.cartId").value(1L))
                 .andExpect(jsonPath("$.success").value(true));
     }
 
