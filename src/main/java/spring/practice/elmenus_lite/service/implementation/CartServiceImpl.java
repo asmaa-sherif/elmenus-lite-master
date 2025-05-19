@@ -61,8 +61,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCart(Long id) {
+    public Boolean deleteCart(Long id) {
+        if (!this.cartRepository.existsById(id)) {
+            throw new NotFoundCustomException("Cart not found");
+        }
         cartRepository.deleteById(id);
+        return true;
     }
 
     @Override
@@ -89,6 +93,7 @@ public class CartServiceImpl implements CartService {
             List<CartItemDto> itemDtos = cart.getCartItems().stream().map(item -> {
                 CartItemDto itemDto = new CartItemDto();
                 itemDto.setCartItemId(item.getCartItemId());
+                itemDto.setMenuItemId(item.getMenuItem().getMenuItemId());
                 itemDto.setProductName(item.getMenuItem().getItemName());
                 itemDto.setPrice(item.getMenuItem().getPrice());
                 itemDto.setQuantity(item.getQuantity());
