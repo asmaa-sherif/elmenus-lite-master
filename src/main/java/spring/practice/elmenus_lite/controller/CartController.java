@@ -45,9 +45,18 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
-        cartService.deleteCart(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<BaseResponse<CartDto>> deleteCart(@PathVariable Long id) {
+        if (id <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid Cart ID", null));
+        }
+        try {
+            cartService.deleteCart(id);
+            return ResponseEntity.ok(new BaseResponse<>(true, "Cart deleted successfully", null));
+        } catch (NotFoundCustomException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(false, e.getMessage(), null));
+        }
     }
 
     @GetMapping("/customer/{customerId}")
