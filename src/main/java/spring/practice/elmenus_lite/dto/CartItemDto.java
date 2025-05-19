@@ -1,11 +1,14 @@
 package spring.practice.elmenus_lite.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
-public class CartItemResponseDto {
+public class CartItemDto {
+    private Long cartItemId;
     private Long menuItemId;
     private String productName;
     private double price;
