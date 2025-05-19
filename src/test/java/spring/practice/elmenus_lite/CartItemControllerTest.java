@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import spring.practice.elmenus_lite.controller.CartItemController;
 import spring.practice.elmenus_lite.dto.AddCartItemRequestDto;
 import spring.practice.elmenus_lite.dto.CartItemDto;
+import spring.practice.elmenus_lite.dto.MenuItemDto;
 import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequestBody;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CartItemService;
@@ -30,20 +31,11 @@ public class CartItemControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    private CartItemDto itemDto;
     private AddCartItemRequestDto requestDto;
 
 
     @BeforeEach
     void setUp() {
-        itemDto = new CartItemDto();
-        itemDto.setCartItemId(1L);
-        itemDto.setMenuItemId(101L);
-        itemDto.setProductName("Burger");
-        itemDto.setPrice(15.0);
-        itemDto.setQuantity(2);
-        itemDto.setTotal(30.0);
 
         requestDto = new AddCartItemRequestDto();
         requestDto.setCustomerId(5L);
@@ -152,7 +144,7 @@ public class CartItemControllerTest {
 
         CartItemDto updatedItem = new CartItemDto();
         updatedItem.setCartItemId(10L);
-        updatedItem.setMenuItemId(101L);
+        updatedItem.setMenuItem(new MenuItemDto());
         updatedItem.setQuantity(5);
         updatedItem.setTotal(50.0);
 
