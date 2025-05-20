@@ -1,6 +1,6 @@
 # Elmenus Lite - Cart Management Module
 
-Elmenus Lite is a Spring Boot backend project that handles cart operations for a food ordering application. This module allows customers to add, modify, remove, and view items in their cart.
+Elmenus Lite is a Spring Boot backend project that handles cart operations for a food ordering application and allows customers to add, modify, remove, and view items in their cart.
 
 ---
 
