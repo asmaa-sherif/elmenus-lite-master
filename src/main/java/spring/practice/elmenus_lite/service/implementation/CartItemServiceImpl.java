@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.service.implementation;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
@@ -9,7 +10,6 @@ import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
-import spring.practice.elmenus_lite.mapper.CartItemMapper;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
@@ -32,6 +32,7 @@ public class CartItemServiceImpl implements CartItemService {
         this.customerRepository = customerRepository;
     }
 
+    @Transactional
     @Override
     public void addCartItem(Long customerId, Long menuItemId, Integer quantity) {
         Cart cart = cartRepository.findByCustomerCustomerId(customerId)
