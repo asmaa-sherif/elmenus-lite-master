@@ -104,6 +104,16 @@ elmenus-lite
 
 ---
 
+## Error Handling
+
+400 Bad Request – Returned when required input is missing or invalid (e.g., negative IDs, null fields).
+
+404 Not Found – Returned when an entity such as cart or item is not found.
+
+500 Internal Server Error – Returned for unexpected issues such as unhandled exceptions or failed service operations.
+
+---
+
 ## API Endpoints
 
 ### 1. Add Item to Cart
