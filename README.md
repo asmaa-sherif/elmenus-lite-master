@@ -59,14 +59,7 @@ sudo apt install postgis postgresql-14-postgis-3
 
 3. **Configure your PostgreSQL database:**
 
-Create a PostgreSQL database and enable PostGIS:
-
-```sql
-CREATE DATABASE elmenus;
-\c elmenus
-CREATE EXTENSION postgis;
-```
-
+Create a PostgreSQL database and enable PostGIS
 Then update `src/main/resources/application.yml`:
 
 ```yaml
@@ -108,12 +101,6 @@ elmenus-lite
 │   └── db              # SQL scripts
 └── ElmenusLiteApplication.java # Main entry point
 ```
----
-## Error Handling
-
-400 Bad Request: Returned when required input is missing or invalid (e.g., invalid IDs, null fields).
-
-500 Internal Server Error: Returned on unexpected system failure or unhandled exceptions.
 
 ---
 
