@@ -16,14 +16,14 @@ Elmenus Lite is a Spring Boot backend project that handles cart operations for a
 
 
 ## Time Estimation vs. Actual
-| Task | Amel                  | Asmaa | Mohamed               |
-| ------------------------------  |-----------------------| ---- |-----------------------|
-| Add to Cart                     | Estimated 6 Actual 3  |    |                       |
-| View Cart                       |                       |   | Estimated 4 Actual 4  |
-| Update Item Quantity            |                       |      | Estimated 3 Actual 5  |
-| Remove Item from Cart           |  |   |                       |
-| Clear Cart                      |  |   |                       |
-| Testing                         | Estimated 16 Actual 10 |    | Estimated 10 Actual 12 |
+| Task | Amel                   | Asmaa               | Mohamed               |
+| ------------------------------  |------------------------|---------------------|-----------------------|
+| Add to Cart                     | Estimated 6 Actual 3   | Estimate 6 Actual 3 |                       |
+| View Cart                       |                        | Estimate 2 Actual 3 | Estimated 4 Actual 4  |
+| Update Item Quantity            |                        | Estimate 4 Actual 5 | Estimated 3 Actual 5  |
+| Remove Item from Cart           |                        | Estimate 2 Actual 3 |                     |
+| Clear Cart                      |                        |                     |                       |
+| Testing                         | Estimated 16 Actual 10 |                     | Estimated 10 Actual 12 |
 
 ---
 
