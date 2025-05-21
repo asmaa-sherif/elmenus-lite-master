@@ -3,20 +3,23 @@ package spring.practice.elmenus_lite;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import spring.practice.elmenus_lite.controller.CartItemController;
 import spring.practice.elmenus_lite.dto.CartItemRequestDto;
 import spring.practice.elmenus_lite.dto.CartItemDto;
 import spring.practice.elmenus_lite.dto.MenuItemDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
+import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.service.CartItemService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CAN_NOT_UPDATE_QUANTITY;
 
 
 @WebMvcTest(CartItemController.class)
@@ -25,7 +28,7 @@ class CartItemControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private CartItemService cartItemService;
 
     @Autowired
@@ -36,7 +39,6 @@ class CartItemControllerTest {
 
     @BeforeEach
     void setUp() {
-
         requestDto = new CartItemRequestDto();
         requestDto.setCustomerId(5L);
         requestDto.setMenuItemId(101L);
@@ -154,7 +156,7 @@ class CartItemControllerTest {
         updatedItem.setQuantity(5);
         updatedItem.setTotal(50.0);
 
-        Mockito.when(cartItemService.updateCartItemQuantity(Mockito.any(CartItemRequestDto.class)))
+        Mockito.when(cartItemService.updateCartItemQuantity(ArgumentMatchers.any()))
                 .thenReturn(updatedItem);
 
         mockMvc.perform(patch("/api/v1/cartItem/updateItemQuantity")
@@ -206,7 +208,8 @@ class CartItemControllerTest {
                 .quantity(3)
                 .build();
 
-        Mockito.when(cartItemService.updateCartItemQuantity(cartItemRequest)).thenReturn(null); // failed update
+        Mockito.when(cartItemService.updateCartItemQuantity(ArgumentMatchers.any()))
+                .thenThrow(new SaveOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage())); // failed update
 
         mockMvc.perform(patch("/api/v1/cartItem/updateItemQuantity")
                         .contentType(MediaType.APPLICATION_JSON)
