@@ -35,6 +35,10 @@ public class CartItemServiceImpl implements CartItemService {
     @Transactional
     @Override
     public void addCartItem(Long customerId, Long menuItemId, Integer quantity) {
+        // TODO: getCustomer ->
+        //  getCart ->
+        //  create new cart if not exist
+        // TODO: create findByCustomerId
         Cart cart = cartRepository.findByCustomerCustomerId(customerId)
                 .orElseGet(() -> {
                     Customer customer = customerRepository.findById(customerId)
@@ -60,6 +64,8 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public Boolean deleteCartItemById(Long id) {
+        // TODO: extract this to a method
+        //  this.cartItemRepository.existsById(id)
         if (!this.cartItemRepository.existsById(id)) {
             throw new NotFoundCustomException("Cart item not found");
         }
@@ -70,11 +76,13 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto) {
+        // TODO: extract this to a method
         CartItem existingItem = cartItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("CartItem not found with id: " + id));
 
         existingItem.setQuantity(cartItemDto.getQuantity());
 
+        // TODO: use service instead of the repo
         MenuItem menuItem = menuItemRepository.findById(cartItemDto.getMenuItem().getMenuItemId())
                 .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + cartItemDto.getMenuItem().getMenuItemId()));
 
@@ -86,6 +94,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemDto updateCartItemQuantity(Long cartId, Long cartItemId, Integer quantity) {
+        // TODO: use cartItemById only
         CartItem cartItem = cartItemRepository.findByCartItemIdAndCartCartId(cartItemId, cartId)
                 .orElseThrow(() -> new NotFoundCustomException("Cart Item with id: " + cartItemId + " not found in this cart " + cartId));
         cartItem.setQuantity(quantity);
@@ -93,7 +102,7 @@ public class CartItemServiceImpl implements CartItemService {
         return mapToCartItemResponseDto(updatedItem);
     }
 
-
+    // TODO: use mapper
     // Mapper from Entity to DTO
     private CartItemDto mapToCartItemResponseDto(CartItem cartItem) {
         CartItemDto dto = new CartItemDto();
@@ -110,6 +119,7 @@ public class CartItemServiceImpl implements CartItemService {
         return dto;
     }
 
+    // TODO: use mapper
     // Mapper from DTO to Entity
     private CartItem mapToCartItem(CartItemDto dto) {
         CartItem cartItem = new CartItem();

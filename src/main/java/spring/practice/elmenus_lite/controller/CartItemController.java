@@ -20,6 +20,8 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<BaseResponse<CartItemDto>> addCartItem(@RequestBody AddCartItemRequestDto request) {
+        // TODO: ControllerAdvice for exceptions
+        // TODO: Validation for request
         if (request.getCustomerId() == null || request.getCustomerId() <= 0 ||
                 request.getMenuItemId() == null || request.getMenuItemId() <= 0 ||
                 request.getQuantity() == null || request.getQuantity() <= 0) {
@@ -58,6 +60,7 @@ public class CartItemController {
     public ResponseEntity<BaseResponse<CartItemDto>> updateItemQuantity(@PathVariable("cartId") Long cartId,
                                                                         @PathVariable("cartItemId") Long cartItemId,
                                                                         @RequestBody UpdateItemQuantityRequestBody quantity) {
+        // TODO: rename endpoint and use AddCartItemRequestDto
         if (quantity == null || quantity.getQuantity() <= 0) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid quantity", null));
         }
