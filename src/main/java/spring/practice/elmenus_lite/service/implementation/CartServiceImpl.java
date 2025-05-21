@@ -1,6 +1,5 @@
 package spring.practice.elmenus_lite.service.implementation;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartDto;
@@ -102,7 +101,6 @@ public class CartServiceImpl implements CartService {
                 menuItem.setItemName(item.getMenuItem().getItemName());
                 menuItem.setPrice(item.getMenuItem().getPrice());
                 itemDto.setMenuItem(menuItem);
-                itemDto.setProductName(item.getMenuItem().getItemName());
 //                itemDto.setPrice(item.getMenuItem().getPrice());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setTotal(item.getMenuItem().getPrice() * item.getQuantity());

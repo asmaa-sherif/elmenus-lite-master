@@ -1,16 +1,18 @@
 package spring.practice.elmenus_lite.service;
 
 import spring.practice.elmenus_lite.dto.CartItemDto;
+import spring.practice.elmenus_lite.dto.CartItemRequestDto;
+import spring.practice.elmenus_lite.entity.CartItem;
 
 //add, delete , update
 public interface CartItemService {
     void addCartItem(Long customerId, Long menuItemId, Integer quantity);
 
-    CartItemDto getCartItemById(Long id);
+    CartItem getCartItemById(Long id);
 
     Boolean deleteCartItemById(Long id);
 
     CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto);
 
-    CartItemDto updateCartItemQuantity(Long cartId, Long cartItemId, Integer quantity);
+    CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest);
 }
