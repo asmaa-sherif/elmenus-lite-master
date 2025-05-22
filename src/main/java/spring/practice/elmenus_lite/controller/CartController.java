@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cart")
+@Tag(name = "Cart Management", description = "Endpoints for managing customer carts, including retrieval and deletion operations")
 public class CartController {
     private final CartService cartService;
 
