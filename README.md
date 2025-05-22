@@ -35,7 +35,7 @@ Elmenus Lite is a Spring Boot backend project that handles cart operations for a
 * Maven
 * PostgreSQL
 * Liquibase
-
+* Swagger
 ---
 
 ## Installation & Setup

@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
 @RestController
 @RequestMapping("/api/v1/cartItem")
+@Tag(name = "Cart Item Management", description = "Endpoints for managing customer carts, including adding, viewing, updating, and deleting cart items")
 public class CartItemController {
     private final CartItemService cartItemService;
 
