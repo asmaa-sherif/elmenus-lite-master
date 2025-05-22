@@ -1,16 +1,17 @@
 package spring.practice.elmenus_lite.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCartItemRequestDto {
+public class CartItemRequestDto {
+    private Long cartItemId;
     private Long customerId;
     private Long menuItemId;
     private Integer quantity;

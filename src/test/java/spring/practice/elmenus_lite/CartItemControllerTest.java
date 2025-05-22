@@ -3,41 +3,43 @@ package spring.practice.elmenus_lite;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import spring.practice.elmenus_lite.controller.CartItemController;
-import spring.practice.elmenus_lite.dto.AddCartItemRequestDto;
+import spring.practice.elmenus_lite.dto.CartItemRequestDto;
 import spring.practice.elmenus_lite.dto.CartItemDto;
 import spring.practice.elmenus_lite.dto.MenuItemDto;
-import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequestBody;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
+import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.service.CartItemService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CAN_NOT_UPDATE_QUANTITY;
 
 
 @WebMvcTest(CartItemController.class)
-public class CartItemControllerTest {
+class CartItemControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private CartItemService cartItemService;
 
     @Autowired
     private ObjectMapper objectMapper;
-    private AddCartItemRequestDto requestDto;
+
+    private CartItemRequestDto requestDto;
 
 
     @BeforeEach
     void setUp() {
-
-        requestDto = new AddCartItemRequestDto();
+        requestDto = new CartItemRequestDto();
         requestDto.setCustomerId(5L);
         requestDto.setMenuItemId(101L);
         requestDto.setQuantity(2);
@@ -139,21 +141,27 @@ public class CartItemControllerTest {
 
     @Test
     void testUpdateItemQuantity_success() throws Exception {
-        UpdateItemQuantityRequestBody body = new UpdateItemQuantityRequestBody();
-        body.setQuantity(5);
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(1L)
+                .menuItemId(10L)
+                .quantity(5)
+                .build();
+
+        MenuItemDto menuItemDto = new MenuItemDto();
+        menuItemDto.setMenuItemId(10L);
 
         CartItemDto updatedItem = new CartItemDto();
-        updatedItem.setCartItemId(10L);
-        updatedItem.setMenuItem(new MenuItemDto());
+        updatedItem.setCartItemId(1L);
+        updatedItem.setMenuItem(menuItemDto);
         updatedItem.setQuantity(5);
         updatedItem.setTotal(50.0);
 
-        Mockito.when(cartItemService.updateCartItemQuantity(1L, 10L, 5))
+        Mockito.when(cartItemService.updateCartItemQuantity(ArgumentMatchers.any()))
                 .thenReturn(updatedItem);
 
-        mockMvc.perform(patch("/api/v1/cartItem/1/10/quantity")
+        mockMvc.perform(patch("/api/v1/cartItem/updateItemQuantity")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)))
+                        .content(objectMapper.writeValueAsString(cartItemRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Quantity updated successfully"))
@@ -162,12 +170,15 @@ public class CartItemControllerTest {
 
     @Test
     void testUpdateItemQuantity_invalidQuantity() throws Exception {
-        UpdateItemQuantityRequestBody body = new UpdateItemQuantityRequestBody();
-        body.setQuantity(0); // invalid
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(1L)
+                .menuItemId(10L)
+                .quantity(0) // invalid quantity
+                .build();
 
-        mockMvc.perform(patch("/api/v1/cartItem/1/10/quantity")
+        mockMvc.perform(patch("/api/v1/cartItem/updateItemQuantity")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)))
+                        .content(objectMapper.writeValueAsString(cartItemRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("Invalid quantity"));
@@ -175,40 +186,34 @@ public class CartItemControllerTest {
 
     @Test
     void testUpdateItemQuantity_invalidCartItemId() throws Exception {
-        UpdateItemQuantityRequestBody body = new UpdateItemQuantityRequestBody();
-        body.setQuantity(3);
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(0L) // invalid cart item ID
+                .menuItemId(10L)
+                .quantity(5)
+                .build();
 
-        mockMvc.perform(patch("/api/v1/cartItem/1/0/quantity")
+        mockMvc.perform(patch("/api/v1/cartItem/updateItemQuantity")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)))
+                        .content(objectMapper.writeValueAsString(cartItemRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("Invalid cart item ID"));
     }
 
     @Test
-    void testUpdateItemQuantity_invalidCartId() throws Exception {
-        UpdateItemQuantityRequestBody body = new UpdateItemQuantityRequestBody();
-        body.setQuantity(3);
-
-        mockMvc.perform(patch("/api/v1/cartItem/0/5/quantity")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Invalid cart ID"));
-    }
-
-    @Test
     void testUpdateItemQuantity_updateFailed() throws Exception {
-        UpdateItemQuantityRequestBody body = new UpdateItemQuantityRequestBody();
-        body.setQuantity(3);
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(1L)
+                .menuItemId(1L)
+                .quantity(3)
+                .build();
 
-        Mockito.when(cartItemService.updateCartItemQuantity(1L, 5L, 3)).thenReturn(null); // failed update
+        Mockito.when(cartItemService.updateCartItemQuantity(ArgumentMatchers.any()))
+                .thenThrow(new SaveOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage())); // failed update
 
-        mockMvc.perform(patch("/api/v1/cartItem/1/5/quantity")
+        mockMvc.perform(patch("/api/v1/cartItem/updateItemQuantity")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)))
+                        .content(objectMapper.writeValueAsString(cartItemRequest)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("can not update quantity"));

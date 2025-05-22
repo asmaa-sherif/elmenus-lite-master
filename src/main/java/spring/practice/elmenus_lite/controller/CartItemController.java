@@ -1,12 +1,16 @@
 package spring.practice.elmenus_lite.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.*;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
+import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.service.CartItemService;
+
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
 @RestController
 @RequestMapping("/api/v1/cartItem")
@@ -19,7 +23,7 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse<CartItemDto>> addCartItem(@RequestBody AddCartItemRequestDto request) {
+    public ResponseEntity<BaseResponse<CartItemDto>> addCartItem(@RequestBody CartItemRequestDto request) {
         // TODO: ControllerAdvice for exceptions
         // TODO: Validation for request
         if (request.getCustomerId() == null || request.getCustomerId() <= 0 ||
@@ -51,35 +55,34 @@ public class CartItemController {
             return ResponseEntity.ok(new BaseResponse<>(true, "Cart item deleted successfully", null));
         } catch (NotFoundCustomException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(false, e.getMessage(), null));
         }
     }
 
-    @PatchMapping("/{cartId}/{cartItemId}/quantity")
-    public ResponseEntity<BaseResponse<CartItemDto>> updateItemQuantity(@PathVariable("cartId") Long cartId,
-                                                                        @PathVariable("cartItemId") Long cartItemId,
-                                                                        @RequestBody UpdateItemQuantityRequestBody quantity) {
-        // TODO: rename endpoint and use AddCartItemRequestDto
-        if (quantity == null || quantity.getQuantity() <= 0) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid quantity", null));
+    @PatchMapping("/updateItemQuantity")
+    public ResponseEntity<BaseResponse<CartItemDto>> updateItemQuantity(@RequestBody CartItemRequestDto cartItemRequest) {
+        if (cartItemRequest == null) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_REQUEST.getMessage(), null));
         }
 
-        if (cartItemId == null || cartItemId <= 0) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid cart item ID", null));
+        if (cartItemRequest.getQuantity() == null || cartItemRequest.getQuantity() <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_QUANTITY.getMessage(), null));
         }
 
-        if (cartId == null || cartId <= 0) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid cart ID", null));
+        if (cartItemRequest.getCartItemId() == null || cartItemRequest.getCartItemId() <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_CART_ITEM_ID.getMessage(), null));
         }
 
-        CartItemDto updatedItem = cartItemService.updateCartItemQuantity(cartId, cartItemId, quantity.getQuantity());
-
-        if (updatedItem == null || updatedItem.getCartItemId() == null) {
-            return ResponseEntity.internalServerError().body(new BaseResponse<>(false, "can not update quantity", null));
+        try {
+            CartItemDto updatedItem = cartItemService.updateCartItemQuantity(cartItemRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(true, QUANTITY_UPDATED_SUCCESSFULLY.getMessage(), updatedItem));
+        } catch (EntityNotFoundException efx) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, efx.getMessage(), null));
+        } catch (SaveOperationException sox){
+            return ResponseEntity.internalServerError().body(new BaseResponse<>(false, sox.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(false, e.getMessage(), null));
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(true, "Quantity updated successfully", updatedItem));
-
     }
 }
