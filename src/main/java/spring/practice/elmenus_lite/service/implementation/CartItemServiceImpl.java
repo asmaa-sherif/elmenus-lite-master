@@ -20,6 +20,8 @@ import spring.practice.elmenus_lite.repository.MenuItemRepository;
 import spring.practice.elmenus_lite.service.CartItemService;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.Optional;
+
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
 @Log4j2
@@ -41,26 +43,38 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Transactional
     @Override
-    public void addCartItem(Long customerId, Long menuItemId, Integer quantity) {
-        // TODO: getCustomer ->
-        //  getCart ->
-        //  create new cart if not exist
-        // TODO: create findByCustomerId
-        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
-                .orElseGet(() -> {
-                    Customer customer = customerRepository.findById(customerId)
-                            .orElseThrow(() -> new NotFoundCustomException("Customer not found"));
-                    Cart newCart = new Cart();
-                    newCart.setCustomer(customer);
-                    return cartRepository.save(newCart);
-                });
+    public void addCartItem(CartItemRequestDto dto) {
+        Customer customer = getCustomerById(dto.getCustomerId());
+        Cart cart = getOrCreateCartByCustomer(customer);
+        MenuItem menuItem = getMenuItemById(dto.getMenuItemId());
 
-        MenuItem menuItem = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new NotFoundCustomException("MenuItem not found"));
-
-        CartItem cartItem = new CartItem(cart, menuItem, quantity);
+        CartItem cartItem = new CartItem(cart, menuItem, dto.getQuantity());
         cartItemRepository.save(cartItem);
     }
+
+    private Customer getCustomerById(Long customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found: " + customerId));
+    }
+
+    private MenuItem getMenuItemById(Long menuItemId) {
+        return menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new EntityNotFoundException("Menu item not found: " + menuItemId));
+    }
+
+    private Cart getOrCreateCartByCustomer(Customer customer) {
+        return cartRepository.findByCustomerCustomerId(customer.getCustomerId())
+                .orElseGet(() -> createCart(customer));
+    }
+
+    private Cart createCart(Customer customer) {
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        return cartRepository.save(cart);
+    }
+
+
+
 
     /**
      * Retrieves a CartItem by its ID.
@@ -76,14 +90,18 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public Boolean deleteCartItemById(Long id) {
+    public Boolean deleteCartItemById(Long cartItemId) {
         // TODO: extract this to a method
         //  this.cartItemRepository.existsById(id)
-        if (!this.cartItemRepository.existsById(id)) {
-            throw new NotFoundCustomException("Cart item not found");
+        if (!isCartItemExist(cartItemId)) {
+            throw new EntityNotFoundException("Cart item not found");
         }
-        cartItemRepository.deleteById(id);
+        cartItemRepository.deleteById(cartItemId);
         return true;
+    }
+
+    private Boolean isCartItemExist(Long cartItemId){
+       return this.cartItemRepository.existsById(cartItemId);
     }
 
 
