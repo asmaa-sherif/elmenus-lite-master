@@ -12,6 +12,8 @@ import spring.practice.elmenus_lite.service.CartService;
 
 import java.util.List;
 
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
+
 @RestController
 @RequestMapping("/api/v1/cart")
 @Tag(name = "Cart Management", description = "Endpoints for managing customer carts, including retrieval and deletion operations")
@@ -26,11 +28,11 @@ public class CartController {
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse<CartDto>> deleteCart(@PathVariable Long id) {
         if (id <= 0) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid Cart ID", null));
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_CART_ID.getMessage(), null));
         }
         try {
             cartService.deleteCart(id);
-            return ResponseEntity.ok(new BaseResponse<>(true, "Cart deleted successfully", null));
+            return ResponseEntity.ok(new BaseResponse<>(true, CART_CLEARED_SUCCESSFULLY.getMessage(), null));
         } catch (NotFoundCustomException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
         } catch (Exception e){
@@ -41,11 +43,11 @@ public class CartController {
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<BaseResponse<CartDto>> getCartByCustomerId(@PathVariable Long customerId) {
         if (customerId <= 0) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid Customer ID", null));
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_CUSTOMER_ID.getMessage(), null));
         }
         try {
             CartDto cart = cartService.getCartByCustomerId(customerId);
-            return ResponseEntity.ok().body(new BaseResponse<>(true, "Cart retrieved successfully", cart));
+            return ResponseEntity.ok().body(new BaseResponse<>(true, CART_RETRIEVED_SUCCESSFULLY.getMessage(), cart));
         } catch (NotFoundCustomException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
         }

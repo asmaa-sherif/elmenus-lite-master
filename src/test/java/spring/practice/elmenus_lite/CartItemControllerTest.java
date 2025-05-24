@@ -49,7 +49,13 @@ class CartItemControllerTest {
 
     @Test
     void testAddCartItem_success() throws Exception {
-        Mockito.doNothing().when(cartItemService).addCartItem(5L, 101L, 2);
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(5L)
+                .menuItemId(101L)
+                .quantity(2)
+                .build();
+
+        Mockito.doNothing().when(cartItemService).addCartItem(cartItemRequest);
 
         mockMvc.perform(post("/api/v1/cartItem")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -72,8 +78,14 @@ class CartItemControllerTest {
 
     @Test
     void testAddCartItem_customerNotFound() throws Exception {
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(5L)
+                .menuItemId(101L)
+                .quantity(2)
+                .build();
+
         Mockito.doThrow(new NotFoundCustomException("Customer not found"))
-                .when(cartItemService).addCartItem(5L, 101L, 2);
+                .when(cartItemService).addCartItem(cartItemRequest);
 
         mockMvc.perform(post("/api/v1/cartItem")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -85,8 +97,14 @@ class CartItemControllerTest {
 
     @Test
     void testAddCartItem_serverError() throws Exception {
+        CartItemRequestDto cartItemRequest = CartItemRequestDto.builder()
+                .cartItemId(5L)
+                .menuItemId(101L)
+                .quantity(2)
+                .build();
+
         Mockito.doThrow(new RuntimeException("Unexpected error"))
-                .when(cartItemService).addCartItem(5L, 101L, 2);
+                .when(cartItemService).addCartItem(cartItemRequest);
 
         mockMvc.perform(post("/api/v1/cartItem")
                         .contentType(MediaType.APPLICATION_JSON)

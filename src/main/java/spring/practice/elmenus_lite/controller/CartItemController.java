@@ -2,6 +2,7 @@ package spring.practice.elmenus_lite.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,19 +26,19 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse<CartItemDto>> addCartItem(@RequestBody CartItemRequestDto request) {
+    public ResponseEntity<BaseResponse<CartItemDto>> addCartItem(@Valid @RequestBody CartItemRequestDto cartItemRequestDto) {
         // TODO: ControllerAdvice for exceptions
         // TODO: Validation for request
-        if (request.getCustomerId() == null || request.getCustomerId() <= 0 ||
-                request.getMenuItemId() == null || request.getMenuItemId() <= 0 ||
-                request.getQuantity() == null || request.getQuantity() <= 0) {
+        if (cartItemRequestDto.getCustomerId() == null || cartItemRequestDto.getCustomerId() <= 0 ||
+                cartItemRequestDto.getMenuItemId() == null || cartItemRequestDto.getMenuItemId() <= 0 ||
+                cartItemRequestDto.getQuantity() == null || cartItemRequestDto.getQuantity() <= 0) {
             return ResponseEntity.badRequest()
-                    .body(new BaseResponse<>(false, "Invalid request data", null));
+                    .body(new BaseResponse<>(false, INVALID_REQUEST.getMessage(), null));
         }
 
         try {
-            cartItemService.addCartItem(request.getCustomerId(), request.getMenuItemId(), request.getQuantity());
-            return ResponseEntity.ok(new BaseResponse<>(true, "Cart item added successfully", null));
+            cartItemService.addCartItem(cartItemRequestDto);
+            return ResponseEntity.ok(new BaseResponse<>(true, CART_ITEM_ADDED_SUCCESSFULLY.getMessage(), null));
         } catch (NotFoundCustomException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new BaseResponse<>(false, ex.getMessage(), null));
@@ -45,16 +46,17 @@ public class CartItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse<>(false, e.getMessage(), null));
         }
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse<CartItemDto>> deleteCartItem(@PathVariable Long id) {
-        if (id <= 0) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(false, "Invalid Cart Item ID", null));
+        }
+
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<BaseResponse<CartItemDto>> deleteCartItem(@PathVariable Long cartItemId) {
+        if (cartItemId <= 0) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_CART_ITEM_ID.getMessage(), null));
         }
         try {
-            cartItemService.deleteCartItemById(id);
-            return ResponseEntity.ok(new BaseResponse<>(true, "Cart item deleted successfully", null));
+            cartItemService.deleteCartItemById(cartItemId);
+            return ResponseEntity.ok(new BaseResponse<>(true, CART_ITEM_DELETED_SUCCESSFULLY.getMessage(), null));
         } catch (NotFoundCustomException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
         } catch (Exception e) {
