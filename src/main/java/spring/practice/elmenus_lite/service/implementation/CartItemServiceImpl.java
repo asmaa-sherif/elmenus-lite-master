@@ -89,12 +89,11 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public Boolean deleteCartItemById(Long cartItemId) {
+    public void deleteCartItemById(Long cartItemId) {
         if (!isCartItemExist(cartItemId)) {
             throw new EntityNotFoundException(CART_ITEM_NOT_FOUND.getMessage() + cartItemId);
         }
         cartItemRepository.deleteById(cartItemId);
-        return true;
     }
 
     private Boolean isCartItemExist(Long cartItemId) {
@@ -103,17 +102,12 @@ public class CartItemServiceImpl implements CartItemService {
 
 
     @Override
-    public CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto) {
-        // TODO: extract this to a method
-        CartItem existingItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("CartItem not found with id: " + id));
+    public CartItemDto updateCartItemById(CartItemRequestDto cartItemRequestDto) {
 
-        existingItem.setQuantity(cartItemDto.getQuantity());
+        CartItem existingItem = getCartItemById(cartItemRequestDto.getCartItemId());
+        existingItem.setQuantity(cartItemRequestDto.getQuantity());
 
-        // TODO: use service instead of the repo
-        MenuItem menuItem = menuItemRepository.findById(cartItemDto.getMenuItem().getMenuItemId())
-                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + cartItemDto.getMenuItem().getMenuItemId()));
-
+        MenuItem menuItem = getMenuItemById(cartItemRequestDto.getMenuItemId());
         existingItem.setMenuItem(menuItem);
 
         CartItem updatedItem = cartItemRepository.save(existingItem);

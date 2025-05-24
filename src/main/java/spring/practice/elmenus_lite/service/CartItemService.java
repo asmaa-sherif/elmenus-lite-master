@@ -10,9 +10,9 @@ public interface CartItemService {
 
     CartItem getCartItemById(Long id);
 
-    Boolean deleteCartItemById(Long id);
+    void deleteCartItemById(Long id);
 
-    CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto);
+    CartItemDto updateCartItemById(CartItemRequestDto cartItemRequestDto);
 
     CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest);
 }
