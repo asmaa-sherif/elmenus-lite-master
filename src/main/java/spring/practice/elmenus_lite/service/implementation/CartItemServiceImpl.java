@@ -2,6 +2,7 @@ package spring.practice.elmenus_lite.service.implementation;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
@@ -11,16 +12,12 @@ import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
 import spring.practice.elmenus_lite.repository.MenuItemRepository;
 import spring.practice.elmenus_lite.service.CartItemService;
-import lombok.extern.log4j.Log4j2;
-
-import java.util.Optional;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
@@ -43,23 +40,27 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Transactional
     @Override
-    public void addCartItem(CartItemRequestDto dto) {
-        Customer customer = getCustomerById(dto.getCustomerId());
+    public void addCartItem(CartItemRequestDto cartItemRequestDto) {
+        Customer customer = getCustomerById(cartItemRequestDto.getCustomerId());
         Cart cart = getOrCreateCartByCustomer(customer);
-        MenuItem menuItem = getMenuItemById(dto.getMenuItemId());
+        MenuItem menuItem = getMenuItemById(cartItemRequestDto.getMenuItemId());
 
-        CartItem cartItem = new CartItem(cart, menuItem, dto.getQuantity());
+        CartItem cartItem = CartItem.builder()
+                .cart(cart)
+                .menuItem(menuItem)
+                .quantity(cartItemRequestDto.getQuantity())
+                .build();
         cartItemRepository.save(cartItem);
     }
 
     private Customer getCustomerById(Long customerId) {
         return customerRepository.findById(customerId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found: " + customerId));
+                .orElseThrow(() -> new EntityNotFoundException(CUSTOMER_NOT_FOUND.getMessage() + customerId));
     }
 
     private MenuItem getMenuItemById(Long menuItemId) {
         return menuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new EntityNotFoundException("Menu item not found: " + menuItemId));
+                .orElseThrow(() -> new EntityNotFoundException(Menu_ITEM_NOT_FOUND.getMessage() + menuItemId));
     }
 
     private Cart getOrCreateCartByCustomer(Customer customer) {
@@ -72,8 +73,6 @@ public class CartItemServiceImpl implements CartItemService {
         cart.setCustomer(customer);
         return cartRepository.save(cart);
     }
-
-
 
 
     /**
@@ -91,17 +90,15 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public Boolean deleteCartItemById(Long cartItemId) {
-        // TODO: extract this to a method
-        //  this.cartItemRepository.existsById(id)
         if (!isCartItemExist(cartItemId)) {
-            throw new EntityNotFoundException("Cart item not found");
+            throw new EntityNotFoundException(CART_ITEM_NOT_FOUND.getMessage() + cartItemId);
         }
         cartItemRepository.deleteById(cartItemId);
         return true;
     }
 
-    private Boolean isCartItemExist(Long cartItemId){
-       return this.cartItemRepository.existsById(cartItemId);
+    private Boolean isCartItemExist(Long cartItemId) {
+        return this.cartItemRepository.existsById(cartItemId);
     }
 
 
@@ -129,7 +126,7 @@ public class CartItemServiceImpl implements CartItemService {
      * @param cartItemRequest the request containing the CartItem ID and the new quantity
      * @return the updated CartItem as a DTO
      * @throws EntityNotFoundException if the CartItem with the given ID is not found
-     * @throws SaveOperationException if there is an error during the save operation
+     * @throws SaveOperationException  if there is an error during the save operation
      */
     @Override
     public CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest) {
