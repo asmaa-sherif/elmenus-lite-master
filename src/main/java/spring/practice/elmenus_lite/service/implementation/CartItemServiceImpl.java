@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
 import spring.practice.elmenus_lite.dto.CartItemRequestDto;
 import spring.practice.elmenus_lite.dto.MenuItemDto;
+import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequest;
 import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
@@ -141,15 +142,15 @@ public class CartItemServiceImpl implements CartItemService {
     /**
      * Updates the quantity of a CartItem based on the provided request.
      *
-     * @param cartItemRequest the request containing the CartItem ID and the new quantity
+     * @param updateItemQuantityRequest the request containing the CartItem ID and the new quantity
      * @return the updated CartItem as a DTO
      * @throws EntityNotFoundException if the CartItem with the given ID is not found
      * @throws DatabaseOperationException  if there is an error during the save operation
      */
     @Override
-    public CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest) {
-        CartItem cartItem = getCartItemById(cartItemRequest.getCartItemId());
-        cartItem.setQuantity(cartItemRequest.getQuantity());
+    public CartItemDto updateCartItemQuantity(UpdateItemQuantityRequest updateItemQuantityRequest) {
+        CartItem cartItem = getCartItemById(updateItemQuantityRequest.getCartItemId());
+        cartItem.setQuantity(updateItemQuantityRequest.getQuantity());
         try {
             CartItem updatedItem = cartItemRepository.save(cartItem);
             return mapToCartItemResponseDto(updatedItem);
