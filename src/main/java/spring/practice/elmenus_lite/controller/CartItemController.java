@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.*;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
-import spring.practice.elmenus_lite.handlerException.SaveOperationException;
+import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
 import spring.practice.elmenus_lite.service.CartItemService;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
@@ -39,7 +38,7 @@ public class CartItemController {
         try {
             cartItemService.addCartItem(cartItemRequestDto);
             return ResponseEntity.ok(new BaseResponse<>(true, CART_ITEM_ADDED_SUCCESSFULLY.getMessage(), null));
-        } catch (NotFoundCustomException ex) {
+        } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new BaseResponse<>(false, ex.getMessage(), null));
         } catch (Exception e) {
@@ -57,7 +56,7 @@ public class CartItemController {
         try {
             cartItemService.deleteCartItemById(cartItemId);
             return ResponseEntity.ok(new BaseResponse<>(true, CART_ITEM_DELETED_SUCCESSFULLY.getMessage(), null));
-        } catch (NotFoundCustomException ex) {
+        } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(false, e.getMessage(), null));
@@ -83,7 +82,7 @@ public class CartItemController {
             return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(true, QUANTITY_UPDATED_SUCCESSFULLY.getMessage(), updatedItem));
         } catch (EntityNotFoundException efx) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, efx.getMessage(), null));
-        } catch (SaveOperationException sox){
+        } catch (DatabaseOperationException sox){
             return ResponseEntity.internalServerError().body(new BaseResponse<>(false, sox.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(false, e.getMessage(), null));

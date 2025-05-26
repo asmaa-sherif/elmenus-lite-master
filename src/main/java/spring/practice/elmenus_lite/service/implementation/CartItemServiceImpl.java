@@ -13,7 +13,6 @@ import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
-import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
@@ -116,7 +115,7 @@ public class CartItemServiceImpl implements CartItemService {
         }
     }
 
-    private Boolean isCartItemExist(Long cartItemId) {
+    private boolean isCartItemExist(Long cartItemId) {
         if (this.cartItemRepository.existsById(cartItemId)) {
             return true;
         } else {
@@ -145,7 +144,7 @@ public class CartItemServiceImpl implements CartItemService {
      * @param cartItemRequest the request containing the CartItem ID and the new quantity
      * @return the updated CartItem as a DTO
      * @throws EntityNotFoundException if the CartItem with the given ID is not found
-     * @throws SaveOperationException  if there is an error during the save operation
+     * @throws DatabaseOperationException  if there is an error during the save operation
      */
     @Override
     public CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest) {
@@ -154,9 +153,9 @@ public class CartItemServiceImpl implements CartItemService {
         try {
             CartItem updatedItem = cartItemRepository.save(cartItem);
             return mapToCartItemResponseDto(updatedItem);
-        } catch (SaveOperationException e) {
+        } catch (DatabaseOperationException e) {
             log.error(CAN_NOT_UPDATE_QUANTITY.getMessage());
-            throw new SaveOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage() + " " + e.getMessage(), e);
+            throw new DatabaseOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage() + " " + e.getMessage(), e);
         }
     }
 

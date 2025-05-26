@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_NOT_FOUND;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CUSTOMER_NOT_FOUND;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -124,7 +125,7 @@ public class CartServiceImpl implements CartService {
     private Cart mapToEntity(CartDto dto) {
         Cart cart = new Cart();
         Customer customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND.getMessage()+dto.getCustomerId()));
         cart.setCustomer(customer);
         cart.setCartItems(new ArrayList<>());
         for (CartItemDto cartItem : dto.getCartItems()) {
