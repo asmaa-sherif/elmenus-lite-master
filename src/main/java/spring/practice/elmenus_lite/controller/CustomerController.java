@@ -1,11 +1,11 @@
 package spring.practice.elmenus_lite.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.CustomerDto;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CustomerService;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class CustomerController {
 
     @GetMapping("/{customerId}")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable("customerId") Long customerId) {
-        CustomerDto customerDto = customerService.findById(customerId).orElseThrow(NotFoundCustomException::new);;
+        CustomerDto customerDto = customerService.findById(customerId).orElseThrow(EntityNotFoundException::new);
         return ResponseEntity.ok(customerDto);
     }
 
@@ -39,16 +39,16 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-    public ResponseEntity<?> updateCustomerById(@PathVariable("customerId") Long customerId,
+    public ResponseEntity<CustomerDto> updateCustomerById(@PathVariable("customerId") Long customerId,
                                                 @RequestBody CustomerDto customer) {
         CustomerDto customerDto = this.customerService.update(customerId, customer);
         return ResponseEntity.ok(customerDto);
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<?> delete(@PathVariable("customerId") Long customerId) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("customerId") Long customerId) {
         if (Boolean.FALSE.equals(this.customerService.delete(customerId))) {
-            throw new NotFoundCustomException("can not delete this customer");
+            throw new EntityNotFoundException("can not delete this customer");
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

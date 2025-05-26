@@ -1,6 +1,7 @@
 package spring.practice.elmenus_lite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,10 +11,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import spring.practice.elmenus_lite.controller.CartController;
 import spring.practice.elmenus_lite.dto.CartDto;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CartService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_CLEARED_SUCCESSFULLY;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_NOT_FOUND;
 
 @WebMvcTest(CartController.class)
 class CartControllerTest {
@@ -45,7 +47,7 @@ class CartControllerTest {
         mockMvc.perform(delete("/api/v1/cart/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("Cart deleted successfully"));
+                .andExpect(jsonPath("$.message").value(CART_CLEARED_SUCCESSFULLY.getMessage()));
     }
 
     @Test
@@ -57,11 +59,11 @@ class CartControllerTest {
 
     @Test
     void testDeleteCart_notFound() throws Exception {
-        Mockito.doThrow(new NotFoundCustomException("Cart not found")).when(cartService).deleteCart(2L);
+        Mockito.doThrow(new EntityNotFoundException(CART_NOT_FOUND.getMessage())).when(cartService).deleteCart(2L);
 
         mockMvc.perform(delete("/api/v1/cart/2"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Cart not found"));
+                .andExpect(jsonPath("$.message").value(CART_NOT_FOUND.getMessage()));
     }
 
     @Test
@@ -84,10 +86,10 @@ class CartControllerTest {
     @Test
     void testGetCartByCustomerId_notFound() throws Exception {
         Mockito.when(cartService.getCartByCustomerId(200L))
-                .thenThrow(new NotFoundCustomException("Cart not found"));
+                .thenThrow(new EntityNotFoundException(CART_NOT_FOUND.getMessage()));
 
         mockMvc.perform(get("/api/v1/cart/customer/200"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Cart not found"));
+                .andExpect(jsonPath("$.message").value(CART_NOT_FOUND.getMessage()));
     }
 }

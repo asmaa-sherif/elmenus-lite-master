@@ -1,16 +1,14 @@
 package spring.practice.elmenus_lite.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.BaseResponse;
 import spring.practice.elmenus_lite.dto.CartDto;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CartService;
-
-import java.util.List;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
@@ -33,7 +31,7 @@ public class CartController {
         try {
             cartService.deleteCart(id);
             return ResponseEntity.ok(new BaseResponse<>(true, CART_CLEARED_SUCCESSFULLY.getMessage(), null));
-        } catch (NotFoundCustomException ex) {
+        } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(false, e.getMessage(), null));
@@ -48,7 +46,7 @@ public class CartController {
         try {
             CartDto cart = cartService.getCartByCustomerId(customerId);
             return ResponseEntity.ok().body(new BaseResponse<>(true, CART_RETRIEVED_SUCCESSFULLY.getMessage(), cart));
-        } catch (NotFoundCustomException ex) {
+        } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, ex.getMessage(), null));
         }
     }
