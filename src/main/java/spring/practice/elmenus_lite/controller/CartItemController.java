@@ -64,21 +64,21 @@ public class CartItemController {
     }
 
     @PatchMapping("/updateItemQuantity")
-    public ResponseEntity<BaseResponse<CartItemDto>> updateItemQuantity(@RequestBody CartItemRequestDto cartItemRequest) {
-        if (cartItemRequest == null) {
+    public ResponseEntity<BaseResponse<CartItemDto>> updateItemQuantity(@RequestBody UpdateItemQuantityRequest updateItemQuantityRequest) {
+        if (updateItemQuantityRequest == null) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_REQUEST.getMessage(), null));
         }
 
-        if (cartItemRequest.getQuantity() == null || cartItemRequest.getQuantity() <= 0) {
+        if (updateItemQuantityRequest.getQuantity() == null || updateItemQuantityRequest.getQuantity() <= 0) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_QUANTITY.getMessage(), null));
         }
 
-        if (cartItemRequest.getCartItemId() == null || cartItemRequest.getCartItemId() <= 0) {
+        if (updateItemQuantityRequest.getCartItemId() == null || updateItemQuantityRequest.getCartItemId() <= 0) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(false, INVALID_CART_ITEM_ID.getMessage(), null));
         }
 
         try {
-            CartItemDto updatedItem = cartItemService.updateCartItemQuantity(cartItemRequest);
+            CartItemDto updatedItem = cartItemService.updateCartItemQuantity(updateItemQuantityRequest);
             return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(true, QUANTITY_UPDATED_SUCCESSFULLY.getMessage(), updatedItem));
         } catch (EntityNotFoundException efx) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponse<>(false, efx.getMessage(), null));

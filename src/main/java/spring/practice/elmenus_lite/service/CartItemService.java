@@ -2,6 +2,7 @@ package spring.practice.elmenus_lite.service;
 
 import spring.practice.elmenus_lite.dto.CartItemDto;
 import spring.practice.elmenus_lite.dto.CartItemRequestDto;
+import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequest;
 import spring.practice.elmenus_lite.entity.CartItem;
 
 //add, delete , update
@@ -14,5 +15,5 @@ public interface CartItemService {
 
     CartItemDto updateCartItemById(CartItemRequestDto cartItemRequestDto);
 
-    CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest);
+    CartItemDto updateCartItemQuantity(UpdateItemQuantityRequest updateItemQuantityRequest);
 }
