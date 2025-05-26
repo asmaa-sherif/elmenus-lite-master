@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
 import spring.practice.elmenus_lite.dto.CartItemRequestDto;
-import spring.practice.elmenus_lite.dto.MenuItemDto;
 import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequest;
 import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
+import spring.practice.elmenus_lite.mapper.CartItemMapper;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
@@ -30,13 +30,15 @@ public class CartItemServiceImpl implements CartItemService {
     private final MenuItemRepository menuItemRepository;
     private final CartRepository cartRepository;
     private final CustomerRepository customerRepository;
+    private final CartItemMapper cartItemMapper;
 
     @Autowired
-    public CartItemServiceImpl(CartItemRepository cartItemRepository, MenuItemRepository menuItemRepository, CartRepository cartRepository, CustomerRepository customerRepository) {
+    public CartItemServiceImpl(CartItemRepository cartItemRepository, MenuItemRepository menuItemRepository, CartRepository cartRepository, CustomerRepository customerRepository, CartItemMapper cartItemMapper) {
         this.cartItemRepository = cartItemRepository;
         this.menuItemRepository = menuItemRepository;
         this.cartRepository = cartRepository;
         this.customerRepository = customerRepository;
+        this.cartItemMapper = cartItemMapper;
     }
 
     @Transactional
@@ -125,20 +127,6 @@ public class CartItemServiceImpl implements CartItemService {
         }
     }
 
-
-    @Override
-    public CartItemDto updateCartItemById(CartItemRequestDto cartItemRequestDto) {
-
-        CartItem existingItem = getCartItemById(cartItemRequestDto.getCartItemId());
-        existingItem.setQuantity(cartItemRequestDto.getQuantity());
-
-        MenuItem menuItem = getMenuItemById(cartItemRequestDto.getMenuItemId());
-        existingItem.setMenuItem(menuItem);
-
-        CartItem updatedItem = cartItemRepository.save(existingItem);
-        return mapToCartItemResponseDto(updatedItem);
-    }
-
     /**
      * Updates the quantity of a CartItem based on the provided request.
      *
@@ -153,41 +141,10 @@ public class CartItemServiceImpl implements CartItemService {
         cartItem.setQuantity(updateItemQuantityRequest.getQuantity());
         try {
             CartItem updatedItem = cartItemRepository.save(cartItem);
-            return mapToCartItemResponseDto(updatedItem);
+            return this.cartItemMapper.cartItemToCartItemDto(updatedItem);
         } catch (DatabaseOperationException e) {
             log.error(CAN_NOT_UPDATE_QUANTITY.getMessage());
             throw new DatabaseOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage() + " " + e.getMessage(), e);
         }
-    }
-
-    // TODO: use map struct
-    // Mapper from Entity to DTO
-    private CartItemDto mapToCartItemResponseDto(CartItem cartItem) {
-        CartItemDto dto = new CartItemDto();
-        dto.setCartItemId(cartItem.getCartItemId());
-        dto.setQuantity(cartItem.getQuantity());
-        dto.setTotal(cartItem.getMenuItem().getPrice() * cartItem.getQuantity());
-        MenuItemDto menuItemDto = new MenuItemDto();
-        menuItemDto.setMenuItemId(cartItem.getMenuItem().getMenuItemId());
-        menuItemDto.setItemName(cartItem.getMenuItem().getItemName());
-        menuItemDto.setPrice(cartItem.getMenuItem().getPrice());
-        menuItemDto.setItemName(cartItem.getMenuItem().getItemName());  // assuming MenuItem has getItemName()
-        menuItemDto.setPrice(cartItem.getMenuItem().getPrice());
-        dto.setMenuItem(menuItemDto); // add this field to your DTO!
-        return dto;
-    }
-
-    // TODO: use map struct
-    // Mapper from DTO to Entity
-    private CartItem mapToCartItem(CartItemDto dto) {
-        CartItem cartItem = new CartItem();
-        cartItem.setQuantity(dto.getQuantity());
-
-        MenuItem menuItem = menuItemRepository.findById(dto.getMenuItem().getMenuItemId())
-                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + dto.getMenuItem().getMenuItemId()));
-
-        cartItem.setMenuItem(menuItem);
-
-        return cartItem;
     }
 }

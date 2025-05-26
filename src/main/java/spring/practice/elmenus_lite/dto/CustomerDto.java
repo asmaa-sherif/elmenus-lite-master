@@ -1,11 +1,13 @@
 package spring.practice.elmenus_lite.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import spring.practice.elmenus_lite.enums.Gender;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class CustomerDto {
     private Long customerId;
     private String fullName;

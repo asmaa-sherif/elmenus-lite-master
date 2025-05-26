@@ -13,7 +13,5 @@ public interface CartItemService {
 
     void deleteCartItemById(Long id);
 
-    CartItemDto updateCartItemById(CartItemRequestDto cartItemRequestDto);
-
     CartItemDto updateCartItemQuantity(UpdateItemQuantityRequest updateItemQuantityRequest);
 }
