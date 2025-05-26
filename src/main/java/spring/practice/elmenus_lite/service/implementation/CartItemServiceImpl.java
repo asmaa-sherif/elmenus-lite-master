@@ -12,6 +12,7 @@ import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
+import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
 import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
@@ -41,21 +42,34 @@ public class CartItemServiceImpl implements CartItemService {
     @Transactional
     @Override
     public void addCartItem(CartItemRequestDto cartItemRequestDto) {
+        log.info("Adding item to cart - CustomerID: {}, MenuItemID: {}", cartItemRequestDto.getCustomerId(), cartItemRequestDto.getMenuItemId());
+
         Customer customer = getCustomerById(cartItemRequestDto.getCustomerId());
         Cart cart = getOrCreateCartByCustomer(customer);
         MenuItem menuItem = getMenuItemById(cartItemRequestDto.getMenuItemId());
 
-        CartItem cartItem = CartItem.builder()
+        CartItem cartItem = getCartItem(cartItemRequestDto.getQuantity(), cart, menuItem);
+        try {
+
+            cartItemRepository.save(cartItem);
+        } catch (RuntimeException ex) {
+            log.error(CAN_NOT_ADD_CART_ITEM.getMessage(), ex);
+            throw new DatabaseOperationException(CAN_NOT_ADD_CART_ITEM.getMessage(), ex);
+        }
+    }
+
+    private static CartItem getCartItem(int quantity, Cart cart, MenuItem menuItem) {
+        return CartItem.builder()
                 .cart(cart)
                 .menuItem(menuItem)
-                .quantity(cartItemRequestDto.getQuantity())
+                .quantity(quantity)
                 .build();
-        cartItemRepository.save(cartItem);
     }
 
     private Customer getCustomerById(Long customerId) {
         return customerRepository.findById(customerId)
-                .orElseThrow(() -> new EntityNotFoundException(CUSTOMER_NOT_FOUND.getMessage() + customerId));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(CUSTOMER_NOT_FOUND.getMessage() + customerId));
     }
 
     private MenuItem getMenuItemById(Long menuItemId) {
@@ -90,14 +104,25 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void deleteCartItemById(Long cartItemId) {
-        if (!isCartItemExist(cartItemId)) {
-            throw new EntityNotFoundException(CART_ITEM_NOT_FOUND.getMessage() + cartItemId);
+        log.info("Delete cart item with ID {}", cartItemId);
+
+        if (isCartItemExist(cartItemId)) {
+            try {
+                cartItemRepository.deleteById(cartItemId);
+            } catch (RuntimeException e) {
+                log.error(CAN_NOT_DELETE_CART_ITEM.getMessage(), e);
+                throw new DatabaseOperationException(CAN_NOT_DELETE_CART_ITEM.getMessage(), e);
+            }
         }
-        cartItemRepository.deleteById(cartItemId);
     }
 
     private Boolean isCartItemExist(Long cartItemId) {
-        return this.cartItemRepository.existsById(cartItemId);
+        if (this.cartItemRepository.existsById(cartItemId)) {
+            return true;
+        } else {
+            log.error("{} {}", CART_ITEM_NOT_FOUND.getMessage(), cartItemId);
+            throw new EntityNotFoundException(CART_ITEM_NOT_FOUND.getMessage() + cartItemId);
+        }
     }
 
 

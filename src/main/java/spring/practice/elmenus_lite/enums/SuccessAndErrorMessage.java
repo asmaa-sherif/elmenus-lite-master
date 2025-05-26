@@ -23,6 +23,8 @@ public enum SuccessAndErrorMessage {
     INVALID_CART_ID("Invalid cart ID"),
     INVALID_CUSTOMER_ID("Invalid customer ID"),
     CAN_NOT_UPDATE_QUANTITY("can not update quantity"),
+    CAN_NOT_DELETE_CART_ITEM("Can not delete cart item"),
+    CAN_NOT_ADD_CART_ITEM("Can not add cart item"),
     CART_ITEM_NOT_FOUND("Cart Item not found with id "),
     CUSTOMER_NOT_FOUND("Customer not found with id "),
     Menu_ITEM_NOT_FOUND("Menu Item not found with id "),

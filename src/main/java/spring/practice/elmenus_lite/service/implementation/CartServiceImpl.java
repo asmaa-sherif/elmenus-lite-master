@@ -10,7 +10,6 @@ import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CartMapper;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
@@ -37,6 +36,23 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public Boolean deleteCart(Long id) {
+        if (!this.cartRepository.existsById(id)) {
+            throw new EntityNotFoundException(CART_NOT_FOUND.getMessage() + id);
+        }
+        cartRepository.deleteById(id);
+        return true;
+    }
+
+
+    @Override
+    public CartDto getCartByCustomerId(Long customerId) {
+        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
+                .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + customerId));
+        return mapToDto(cart);
+    }
+
+    @Override
     public CartDto getCartById(Long id) {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + id));
@@ -48,6 +64,12 @@ public class CartServiceImpl implements CartService {
         Cart cart = mapToEntity(cartDto);
         Cart savedCart = cartRepository.save(cart);
         return mapToDto(savedCart);
+    }
+
+    @Override
+    public List<CartDto> getAllCarts() {
+        List<Cart> carts = cartRepository.findAll();
+        return carts.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -64,28 +86,6 @@ public class CartServiceImpl implements CartService {
 
         Cart updatedCart = cartRepository.save(cart);
         return mapToDto(updatedCart);
-    }
-
-    @Override
-    public Boolean deleteCart(Long id) {
-        if (!this.cartRepository.existsById(id)) {
-            throw new EntityNotFoundException(CART_NOT_FOUND.getMessage() + id);
-        }
-        cartRepository.deleteById(id);
-        return true;
-    }
-
-    @Override
-    public List<CartDto> getAllCarts() {
-        List<Cart> carts = cartRepository.findAll();
-        return carts.stream().map(this::mapToDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public CartDto getCartByCustomerId(Long customerId) {
-        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
-                .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + customerId));
-        return mapToDto(cart);
     }
 
 
@@ -127,7 +127,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         cart.setCustomer(customer);
         cart.setCartItems(new ArrayList<>());
-        for (CartItemDto cartItem: dto.getCartItems()){
+        for (CartItemDto cartItem : dto.getCartItems()) {
             CartItem item = new CartItem();
             item.setCart(cart);
             item.setQuantity(cartItem.getQuantity());
