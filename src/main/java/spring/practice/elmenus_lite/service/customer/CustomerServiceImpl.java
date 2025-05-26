@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.service.implementation;
+package spring.practice.elmenus_lite.service.customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,7 +7,6 @@ import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CustomerMapper;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
-import spring.practice.elmenus_lite.service.CustomerService;
 
 import java.util.List;
 import java.util.Optional;

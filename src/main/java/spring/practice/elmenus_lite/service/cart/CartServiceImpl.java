@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.service.implementation;
+package spring.practice.elmenus_lite.service.cart;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.mapper.CartMapper;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
-import spring.practice.elmenus_lite.service.CartService;
 
 import java.util.ArrayList;
 import java.util.List;

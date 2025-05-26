@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.controller;
+package spring.practice.elmenus_lite.controller.cart;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,7 +12,7 @@ import spring.practice.elmenus_lite.dto.cart.CartItemDto;
 import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.handlerException.SaveOperationException;
-import spring.practice.elmenus_lite.service.CartItemService;
+import spring.practice.elmenus_lite.service.cart.CartItemService;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 

@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.service;
+package spring.practice.elmenus_lite.service.cart;
 
 import spring.practice.elmenus_lite.dto.cart.CartItemDto;
 import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;

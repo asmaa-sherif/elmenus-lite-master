@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.service;
+package spring.practice.elmenus_lite.service.customer;
 
 import spring.practice.elmenus_lite.dto.customer.CustomerDto;
 

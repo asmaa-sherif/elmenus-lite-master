@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.controller;
+package spring.practice.elmenus_lite.controller.cart;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.BaseResponse;
 import spring.practice.elmenus_lite.dto.cart.CartDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
-import spring.practice.elmenus_lite.service.CartService;
+import spring.practice.elmenus_lite.service.cart.CartService;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 

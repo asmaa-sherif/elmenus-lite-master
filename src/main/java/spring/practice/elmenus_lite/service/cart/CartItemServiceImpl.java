@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.service.implementation;
+package spring.practice.elmenus_lite.service.cart;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,7 +18,6 @@ import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
 import spring.practice.elmenus_lite.repository.MenuItemRepository;
-import spring.practice.elmenus_lite.service.CartItemService;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 

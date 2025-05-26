@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import spring.practice.elmenus_lite.controller.CartController;
+import spring.practice.elmenus_lite.controller.cart.CartController;
 import spring.practice.elmenus_lite.dto.cart.CartDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
-import spring.practice.elmenus_lite.service.CartService;
+import spring.practice.elmenus_lite.service.cart.CartService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
