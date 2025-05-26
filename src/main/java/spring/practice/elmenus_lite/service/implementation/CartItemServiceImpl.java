@@ -2,6 +2,7 @@ package spring.practice.elmenus_lite.service.implementation;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartItemDto;
@@ -11,14 +12,13 @@ import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
+import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
 import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
 import spring.practice.elmenus_lite.repository.MenuItemRepository;
 import spring.practice.elmenus_lite.service.CartItemService;
-import lombok.extern.log4j.Log4j2;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
@@ -41,26 +41,53 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Transactional
     @Override
-    public void addCartItem(Long customerId, Long menuItemId, Integer quantity) {
-        // TODO: getCustomer ->
-        //  getCart ->
-        //  create new cart if not exist
-        // TODO: create findByCustomerId
-        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
-                .orElseGet(() -> {
-                    Customer customer = customerRepository.findById(customerId)
-                            .orElseThrow(() -> new NotFoundCustomException("Customer not found"));
-                    Cart newCart = new Cart();
-                    newCart.setCustomer(customer);
-                    return cartRepository.save(newCart);
-                });
+    public void addCartItem(CartItemRequestDto cartItemRequestDto) {
+        log.info("Adding item to cart - CustomerID: {}, MenuItemID: {}", cartItemRequestDto.getCustomerId(), cartItemRequestDto.getMenuItemId());
 
-        MenuItem menuItem = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new NotFoundCustomException("MenuItem not found"));
+        Customer customer = getCustomerById(cartItemRequestDto.getCustomerId());
+        Cart cart = getOrCreateCartByCustomer(customer);
+        MenuItem menuItem = getMenuItemById(cartItemRequestDto.getMenuItemId());
 
-        CartItem cartItem = new CartItem(cart, menuItem, quantity);
-        cartItemRepository.save(cartItem);
+        CartItem cartItem = getCartItem(cartItemRequestDto.getQuantity(), cart, menuItem);
+        try {
+
+            cartItemRepository.save(cartItem);
+        } catch (RuntimeException ex) {
+            log.error(CAN_NOT_ADD_CART_ITEM.getMessage(), ex);
+            throw new DatabaseOperationException(CAN_NOT_ADD_CART_ITEM.getMessage(), ex);
+        }
     }
+
+    private static CartItem getCartItem(int quantity, Cart cart, MenuItem menuItem) {
+        return CartItem.builder()
+                .cart(cart)
+                .menuItem(menuItem)
+                .quantity(quantity)
+                .build();
+    }
+
+    private Customer getCustomerById(Long customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(CUSTOMER_NOT_FOUND.getMessage() + customerId));
+    }
+
+    private MenuItem getMenuItemById(Long menuItemId) {
+        return menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new EntityNotFoundException(Menu_ITEM_NOT_FOUND.getMessage() + menuItemId));
+    }
+
+    private Cart getOrCreateCartByCustomer(Customer customer) {
+        return cartRepository.findByCustomerCustomerId(customer.getCustomerId())
+                .orElseGet(() -> createCart(customer));
+    }
+
+    private Cart createCart(Customer customer) {
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        return cartRepository.save(cart);
+    }
+
 
     /**
      * Retrieves a CartItem by its ID.
@@ -76,29 +103,36 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public Boolean deleteCartItemById(Long id) {
-        // TODO: extract this to a method
-        //  this.cartItemRepository.existsById(id)
-        if (!this.cartItemRepository.existsById(id)) {
-            throw new NotFoundCustomException("Cart item not found");
+    public void deleteCartItemById(Long cartItemId) {
+        log.info("Delete cart item with ID {}", cartItemId);
+
+        if (isCartItemExist(cartItemId)) {
+            try {
+                cartItemRepository.deleteById(cartItemId);
+            } catch (RuntimeException e) {
+                log.error(CAN_NOT_DELETE_CART_ITEM.getMessage(), e);
+                throw new DatabaseOperationException(CAN_NOT_DELETE_CART_ITEM.getMessage(), e);
+            }
         }
-        cartItemRepository.deleteById(id);
-        return true;
+    }
+
+    private Boolean isCartItemExist(Long cartItemId) {
+        if (this.cartItemRepository.existsById(cartItemId)) {
+            return true;
+        } else {
+            log.error("{} {}", CART_ITEM_NOT_FOUND.getMessage(), cartItemId);
+            throw new EntityNotFoundException(CART_ITEM_NOT_FOUND.getMessage() + cartItemId);
+        }
     }
 
 
     @Override
-    public CartItemDto updateCartItemById(Long id, CartItemDto cartItemDto) {
-        // TODO: extract this to a method
-        CartItem existingItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("CartItem not found with id: " + id));
+    public CartItemDto updateCartItemById(CartItemRequestDto cartItemRequestDto) {
 
-        existingItem.setQuantity(cartItemDto.getQuantity());
+        CartItem existingItem = getCartItemById(cartItemRequestDto.getCartItemId());
+        existingItem.setQuantity(cartItemRequestDto.getQuantity());
 
-        // TODO: use service instead of the repo
-        MenuItem menuItem = menuItemRepository.findById(cartItemDto.getMenuItem().getMenuItemId())
-                .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + cartItemDto.getMenuItem().getMenuItemId()));
-
+        MenuItem menuItem = getMenuItemById(cartItemRequestDto.getMenuItemId());
         existingItem.setMenuItem(menuItem);
 
         CartItem updatedItem = cartItemRepository.save(existingItem);
@@ -111,7 +145,7 @@ public class CartItemServiceImpl implements CartItemService {
      * @param cartItemRequest the request containing the CartItem ID and the new quantity
      * @return the updated CartItem as a DTO
      * @throws EntityNotFoundException if the CartItem with the given ID is not found
-     * @throws SaveOperationException if there is an error during the save operation
+     * @throws SaveOperationException  if there is an error during the save operation
      */
     @Override
     public CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest) {

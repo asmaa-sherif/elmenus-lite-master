@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.service.implementation;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.CartDto;
@@ -9,7 +10,6 @@ import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CartMapper;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
@@ -18,6 +18,8 @@ import spring.practice.elmenus_lite.service.CartService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_NOT_FOUND;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -34,9 +36,26 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public Boolean deleteCart(Long id) {
+        if (!this.cartRepository.existsById(id)) {
+            throw new EntityNotFoundException(CART_NOT_FOUND.getMessage() + id);
+        }
+        cartRepository.deleteById(id);
+        return true;
+    }
+
+
+    @Override
+    public CartDto getCartByCustomerId(Long customerId) {
+        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
+                .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + customerId));
+        return mapToDto(cart);
+    }
+
+    @Override
     public CartDto getCartById(Long id) {
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+                .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + id));
         return mapToDto(cart);
     }
 
@@ -48,41 +67,25 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto updateCart(Long id, CartDto cartDto) {
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
-
-        if (!cart.getCustomer().getCustomerId().equals(cartDto.getCustomerId())) {
-            Customer newCustomer = customerRepository.findById(cartDto.getCustomerId())
-                    .orElseThrow(() -> new RuntimeException("Customer not found"));
-            cart.setCustomer(newCustomer);
-        }
-
-
-        Cart updatedCart = cartRepository.save(cart);
-        return mapToDto(updatedCart);
-    }
-
-    @Override
-    public Boolean deleteCart(Long id) {
-        if (!this.cartRepository.existsById(id)) {
-            throw new NotFoundCustomException("Cart not found");
-        }
-        cartRepository.deleteById(id);
-        return true;
-    }
-
-    @Override
     public List<CartDto> getAllCarts() {
         List<Cart> carts = cartRepository.findAll();
         return carts.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
-    public CartDto getCartByCustomerId(Long customerId) {
-        Cart cart = cartRepository.findByCustomerCustomerId(customerId)
-                .orElseThrow(() -> new NotFoundCustomException("Cart not found"));
-        return mapToDto(cart);
+    public CartDto updateCart(Long id, CartDto cartDto) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + id));
+
+        if (!cart.getCustomer().getCustomerId().equals(cartDto.getCustomerId())) {
+            Customer newCustomer = customerRepository.findById(cartDto.getCustomerId())
+                    .orElseThrow(() -> new EntityNotFoundException(CART_NOT_FOUND.getMessage() + cartDto.getCustomerId()));
+            cart.setCustomer(newCustomer);
+        }
+
+
+        Cart updatedCart = cartRepository.save(cart);
+        return mapToDto(updatedCart);
     }
 
 
@@ -124,7 +127,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         cart.setCustomer(customer);
         cart.setCartItems(new ArrayList<>());
-        for (CartItemDto cartItem: dto.getCartItems()){
+        for (CartItemDto cartItem : dto.getCartItems()) {
             CartItem item = new CartItem();
             item.setCart(cart);
             item.setQuantity(cartItem.getQuantity());
