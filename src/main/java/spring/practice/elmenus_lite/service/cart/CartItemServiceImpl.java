@@ -5,9 +5,9 @@ import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequest;
 import spring.practice.elmenus_lite.dto.cart.CartItemDto;
 import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;
+import spring.practice.elmenus_lite.dto.cart.UpdateItemQuantityRequest;
 import spring.practice.elmenus_lite.dto.menu.MenuItemDto;
 import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.entity.CartItem;
@@ -143,8 +143,8 @@ public class CartItemServiceImpl implements CartItemService {
      *
      * @param updateItemQuantityRequest the request containing the CartItem ID and the new quantity
      * @return the updated CartItem as a DTO
-     * @throws EntityNotFoundException if the CartItem with the given ID is not found
-     * @throws DatabaseOperationException  if there is an error during the save operation
+     * @throws EntityNotFoundException    if the CartItem with the given ID is not found
+     * @throws DatabaseOperationException if there is an error during the save operation
      */
     @Override
     public CartItemDto updateCartItemQuantity(UpdateItemQuantityRequest updateItemQuantityRequest) {
