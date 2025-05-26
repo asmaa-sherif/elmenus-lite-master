@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import spring.practice.elmenus_lite.controller.CartController;
-import spring.practice.elmenus_lite.dto.CartDto;
-import spring.practice.elmenus_lite.service.CartService;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import spring.practice.elmenus_lite.controller.cart.CartController;
+import spring.practice.elmenus_lite.dto.cart.CartDto;
+import spring.practice.elmenus_lite.service.cart.CartService;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_CLEARED_SUCCESSFULLY;
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_NOT_FOUND;
 
