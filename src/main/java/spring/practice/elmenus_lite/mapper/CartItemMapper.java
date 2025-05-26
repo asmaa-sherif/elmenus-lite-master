@@ -6,7 +6,7 @@ import spring.practice.elmenus_lite.entity.CartItem;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = CartMapper.class)
+@Mapper(componentModel = "spring", uses = {CartMapper.class, MenuItemMapper.class})
 public interface CartItemMapper {
      CartItem cartItemDtoToCartItem(CartItemDto dto);
 
