@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import spring.practice.elmenus_lite.common.ValidationMessages;
 import spring.practice.elmenus_lite.controller.cart.CartItemController;
 import spring.practice.elmenus_lite.dto.cart.CartItemDto;
 import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;
@@ -46,7 +47,6 @@ class CartItemControllerTest {
         requestDto.setMenuItemId(101L);
         requestDto.setQuantity(2);
     }
-
 
 
     @Test
@@ -112,7 +112,7 @@ class CartItemControllerTest {
         mockMvc.perform(delete("/api/v1/cartItem/0"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value(INVALID_CART_ITEM_ID.getMessage()))
+                .andExpect(jsonPath("$.message").value(ValidationMessages.INVALID_CART_ITEM_ID))
                 .andExpect(jsonPath("$.data").doesNotExist());
     }
 
@@ -183,7 +183,7 @@ class CartItemControllerTest {
                         .content(objectMapper.writeValueAsString(cartItemRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value(INVALID_QUANTITY.getMessage()));
+                .andExpect(jsonPath("$.message").value(ValidationMessages.INVALID_QUANTITY));
     }
 
     @Test
@@ -199,7 +199,7 @@ class CartItemControllerTest {
                         .content(objectMapper.writeValueAsString(cartItemRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value(INVALID_CART_ITEM_ID.getMessage()));
+                .andExpect(jsonPath("$.message").value(ValidationMessages.INVALID_CART_ITEM_ID));
     }
 
     @Test
@@ -220,7 +220,6 @@ class CartItemControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value(CAN_NOT_UPDATE_QUANTITY.getMessage()));
     }
-
 
 
 }
