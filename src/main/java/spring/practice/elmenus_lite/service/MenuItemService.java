@@ -1,6 +1,6 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.MenuItemResponseDto;
+import spring.practice.elmenus_lite.dto.menu.MenuItemResponseDto;
 import java.util.List;
 
 public interface MenuItemService {

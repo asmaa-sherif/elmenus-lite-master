@@ -1,6 +1,6 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.CustomerDto;
+import spring.practice.elmenus_lite.dto.customer.CustomerDto;
 
 import java.util.List;
 import java.util.Optional;

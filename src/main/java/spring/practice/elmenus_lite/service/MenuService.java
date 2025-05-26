@@ -1,7 +1,7 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.MenuRequestDto;
-import spring.practice.elmenus_lite.dto.MenuResponseDto;
+import spring.practice.elmenus_lite.dto.menu.MenuRequestDto;
+import spring.practice.elmenus_lite.dto.menu.MenuResponseDto;
 
 import java.util.List;
 

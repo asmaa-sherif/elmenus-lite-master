@@ -1,6 +1,6 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.CartDto;
+import spring.practice.elmenus_lite.dto.cart.CartDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.dto;
+package spring.practice.elmenus_lite.dto.restaurant;
 
 import lombok.Getter;
 import lombok.Setter;

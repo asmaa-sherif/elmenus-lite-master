@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.dto;
+package spring.practice.elmenus_lite.dto.cart;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

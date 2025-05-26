@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spring.practice.elmenus_lite.dto.CustomerDto;
+import spring.practice.elmenus_lite.dto.customer.CustomerDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CustomerService;
 

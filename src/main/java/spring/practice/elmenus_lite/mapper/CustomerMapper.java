@@ -1,7 +1,7 @@
 package spring.practice.elmenus_lite.mapper;
 
 import org.mapstruct.Mapper;
-import spring.practice.elmenus_lite.dto.CustomerDto;
+import spring.practice.elmenus_lite.dto.customer.CustomerDto;
 import spring.practice.elmenus_lite.entity.Customer;
 
 import java.util.List;

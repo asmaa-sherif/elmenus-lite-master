@@ -6,11 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.BaseResponse;
-import spring.practice.elmenus_lite.dto.CartDto;
+import spring.practice.elmenus_lite.dto.cart.CartDto;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.service.CartService;
-
-import java.util.List;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 

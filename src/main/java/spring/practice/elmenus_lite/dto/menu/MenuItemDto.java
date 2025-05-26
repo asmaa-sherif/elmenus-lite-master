@@ -1,4 +1,4 @@
-package spring.practice.elmenus_lite.dto;
+package spring.practice.elmenus_lite.dto.menu;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

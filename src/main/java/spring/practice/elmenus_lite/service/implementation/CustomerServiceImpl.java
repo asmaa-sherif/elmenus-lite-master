@@ -2,7 +2,7 @@ package spring.practice.elmenus_lite.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.practice.elmenus_lite.dto.CustomerDto;
+import spring.practice.elmenus_lite.dto.customer.CustomerDto;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CustomerMapper;

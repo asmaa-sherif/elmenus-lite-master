@@ -1,6 +1,6 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.UserTypeResponseDto;
+import spring.practice.elmenus_lite.dto.user.UserTypeResponseDto;
 import java.util.List;
 
 public interface UserTypeService {

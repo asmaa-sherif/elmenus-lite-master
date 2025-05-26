@@ -1,6 +1,6 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.RestaurantResponseDto;
+import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 import java.util.List;
 
 public interface RestaurantService {

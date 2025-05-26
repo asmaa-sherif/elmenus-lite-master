@@ -1,7 +1,7 @@
 package spring.practice.elmenus_lite.service;
 
-import spring.practice.elmenus_lite.dto.CartItemDto;
-import spring.practice.elmenus_lite.dto.CartItemRequestDto;
+import spring.practice.elmenus_lite.dto.cart.CartItemDto;
+import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;
 import spring.practice.elmenus_lite.entity.CartItem;
 
 //add, delete , update
