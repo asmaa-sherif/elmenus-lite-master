@@ -1,10 +1,10 @@
 package spring.practice.elmenus_lite.service.customer;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.customer.CustomerDto;
 import spring.practice.elmenus_lite.entity.Customer;
-import spring.practice.elmenus_lite.handlerException.NotFoundCustomException;
 import spring.practice.elmenus_lite.mapper.CustomerMapper;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
 
@@ -33,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new IllegalArgumentException("Customer ID must be greater than 0 and not null");
         }
         return Optional.ofNullable(this.customerMapper.customerToCustomerDto(this.customerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundCustomException("Customer with ID " + id + " not found"))));
+                .orElseThrow(() -> new EntityNotFoundException("Customer with ID " + id + " not found"))));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundCustomException("Item not exist to make update"));
+                .orElseThrow(() -> new EntityNotFoundException("Item not exist to make update"));
 
         if (newCustomer.getGender() != null) {
             customer.setGender(newCustomer.getGender());

@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import spring.practice.elmenus_lite.dto.UpdateItemQuantityRequest;
 import spring.practice.elmenus_lite.dto.cart.CartItemDto;
 import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;
 import spring.practice.elmenus_lite.dto.menu.MenuItemDto;
@@ -13,7 +14,6 @@ import spring.practice.elmenus_lite.entity.CartItem;
 import spring.practice.elmenus_lite.entity.Customer;
 import spring.practice.elmenus_lite.entity.MenuItem;
 import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
-import spring.practice.elmenus_lite.handlerException.SaveOperationException;
 import spring.practice.elmenus_lite.repository.CartItemRepository;
 import spring.practice.elmenus_lite.repository.CartRepository;
 import spring.practice.elmenus_lite.repository.CustomerRepository;
@@ -115,7 +115,7 @@ public class CartItemServiceImpl implements CartItemService {
         }
     }
 
-    private Boolean isCartItemExist(Long cartItemId) {
+    private boolean isCartItemExist(Long cartItemId) {
         if (this.cartItemRepository.existsById(cartItemId)) {
             return true;
         } else {
@@ -141,21 +141,21 @@ public class CartItemServiceImpl implements CartItemService {
     /**
      * Updates the quantity of a CartItem based on the provided request.
      *
-     * @param cartItemRequest the request containing the CartItem ID and the new quantity
+     * @param updateItemQuantityRequest the request containing the CartItem ID and the new quantity
      * @return the updated CartItem as a DTO
      * @throws EntityNotFoundException if the CartItem with the given ID is not found
-     * @throws SaveOperationException  if there is an error during the save operation
+     * @throws DatabaseOperationException  if there is an error during the save operation
      */
     @Override
-    public CartItemDto updateCartItemQuantity(CartItemRequestDto cartItemRequest) {
-        CartItem cartItem = getCartItemById(cartItemRequest.getCartItemId());
-        cartItem.setQuantity(cartItemRequest.getQuantity());
+    public CartItemDto updateCartItemQuantity(UpdateItemQuantityRequest updateItemQuantityRequest) {
+        CartItem cartItem = getCartItemById(updateItemQuantityRequest.getCartItemId());
+        cartItem.setQuantity(updateItemQuantityRequest.getQuantity());
         try {
             CartItem updatedItem = cartItemRepository.save(cartItem);
             return mapToCartItemResponseDto(updatedItem);
-        } catch (SaveOperationException e) {
+        } catch (DatabaseOperationException e) {
             log.error(CAN_NOT_UPDATE_QUANTITY.getMessage());
-            throw new SaveOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage() + " " + e.getMessage(), e);
+            throw new DatabaseOperationException(CAN_NOT_UPDATE_QUANTITY.getMessage() + " " + e.getMessage(), e);
         }
     }
 
