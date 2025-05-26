@@ -11,14 +11,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import spring.practice.elmenus_lite.controller.CartItemController;
-import spring.practice.elmenus_lite.dto.CartItemRequestDto;
-import spring.practice.elmenus_lite.dto.CartItemDto;
-import spring.practice.elmenus_lite.dto.MenuItemDto;
+import spring.practice.elmenus_lite.controller.cart.CartItemController;
+import spring.practice.elmenus_lite.dto.cart.CartItemDto;
+import spring.practice.elmenus_lite.dto.cart.CartItemRequestDto;
+import spring.practice.elmenus_lite.dto.menu.MenuItemDto;
 import spring.practice.elmenus_lite.handlerException.DatabaseOperationException;
-import spring.practice.elmenus_lite.service.CartItemService;
+import spring.practice.elmenus_lite.service.cart.CartItemService;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
 
