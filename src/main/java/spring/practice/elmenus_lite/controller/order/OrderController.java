@@ -3,12 +3,10 @@ package spring.practice.elmenus_lite.controller.order;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.order.OrderDetailsDto;
 import spring.practice.elmenus_lite.dto.order.OrderSummaryDto;
+import spring.practice.elmenus_lite.dto.order.PlaceOrderRequestDto;
 import spring.practice.elmenus_lite.service.order.OrderService;
 
 import java.util.List;
@@ -37,6 +35,12 @@ public class OrderController {
     @GetMapping("/restaurant/{restaurantId}/history")
     public ResponseEntity<List<OrderDetailsDto>> getRestaurantOrdersHistory(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(orderService.getRestaurantOrdersHistory(restaurantId));
+    }
+
+    @PostMapping("/place")
+    public ResponseEntity<OrderSummaryDto> placeOrder(@RequestBody PlaceOrderRequestDto placeOrderRequestDto) {
+        OrderSummaryDto orderSummary = orderService.placeOrder(placeOrderRequestDto);
+        return ResponseEntity.ok(orderSummary);
     }
 
 

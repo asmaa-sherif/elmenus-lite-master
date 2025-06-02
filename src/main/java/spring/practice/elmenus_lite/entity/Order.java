@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,17 +25,21 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address;
 
     @ManyToOne
     @JoinColumn(name = "order_status_id")
+    @JsonIgnore
     private OrderStatus orderStatus;
 
+    /*
     @ManyToOne
     @JoinColumn(name = "order_tracking_id")
     private OrderTracking tracking;
+
+     */
 
     @ManyToOne
     @JoinColumn(name = "promotion_id")

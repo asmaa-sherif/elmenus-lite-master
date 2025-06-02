@@ -1,7 +1,7 @@
 package spring.practice.elmenus_lite.mapper;
 
 import org.mapstruct.Mapper;
-import spring.practice.elmenus_lite.dto.MenuItemDto;
+import spring.practice.elmenus_lite.dto.menu.MenuItemDto;
 import spring.practice.elmenus_lite.entity.MenuItem;
 
 import java.util.List;

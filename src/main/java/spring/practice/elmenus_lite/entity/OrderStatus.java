@@ -14,9 +14,9 @@ import lombok.*;
 public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long orderStatusId;
-    private String orderStatusName;
-}
+    private String orderStatusName;}
 
 
 
