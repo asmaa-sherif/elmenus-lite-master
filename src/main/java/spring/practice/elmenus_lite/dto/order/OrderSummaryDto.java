@@ -15,6 +15,7 @@ public class OrderSummaryDto {
     private Long orderId;
     private String status;
     private String restaurantName;
+    private String customerName;
     private LocalDateTime orderDate;
     private Double total;
 }

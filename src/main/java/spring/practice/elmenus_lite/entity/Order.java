@@ -33,10 +33,6 @@ public class Order {
     private OrderStatus orderStatus;
 
     @ManyToOne
-    @JoinColumn(name = "order_tracking_id")
-    private OrderTracking tracking;
-
-    @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 

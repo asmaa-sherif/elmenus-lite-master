@@ -19,6 +19,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final MenuItemRepository menuItemRepository;
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
+   
 
     @Override
     public void run(String... args) throws Exception {
@@ -216,4 +217,5 @@ public class DatabaseInitializer implements CommandLineRunner {
         }
 
     }
+
 }

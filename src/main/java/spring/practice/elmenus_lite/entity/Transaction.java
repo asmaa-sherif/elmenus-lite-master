@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -12,15 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transactionId;
-
-    @ManyToOne
-    @JoinColumn(name = "transaction_details_id")
-    private TransactionDetails transactionDetails;
+    private UUID transactionId;
 
     @ManyToOne
     @JoinColumn(name = "transaction_status_id")

@@ -4,14 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.cart.CartDto;
-import spring.practice.elmenus_lite.dto.cart.CartItemDto;
-import spring.practice.elmenus_lite.dto.menu.MenuItemDto;
-import spring.practice.elmenus_lite.dto.CartDto;
 import spring.practice.elmenus_lite.entity.Cart;
 import spring.practice.elmenus_lite.mapper.CartMapper;
 import spring.practice.elmenus_lite.repository.CartRepository;
-import spring.practice.elmenus_lite.repository.CustomerRepository;
-import spring.practice.elmenus_lite.service.CartService;
 
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.CART_NOT_FOUND;
 

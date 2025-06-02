@@ -29,6 +29,7 @@ public enum SuccessAndErrorMessage {
     CUSTOMER_NOT_FOUND("Customer not found with id "),
     Menu_ITEM_NOT_FOUND("Menu Item not found with id "),
     CART_NOT_FOUND("Cart not found with id "),
+    ORDER_NOT_FOUND("Order not found with id "),
     INVALID_REQUEST("Invalid request data"),
     ;
 
