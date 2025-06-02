@@ -19,6 +19,9 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final MenuItemRepository menuItemRepository;
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
+    private final OrderRepository orderRepository;
+    //  private final OrderItemRepository orderItemRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -216,4 +219,34 @@ public class DatabaseInitializer implements CommandLineRunner {
         }
 
     }
+
+    /*if (orderRepository.count() == 0) {
+        Customer customer = customerRepository.findAll().get(0);
+        MenuItem menuItem = menuItemRepository.findAll().get(0);
+
+        OrderStatus status = new OrderStatus();
+        status.setOrderStatusId(1L); // Assume ID 1 = "Pending"
+        order.setOrderStatus(status);
+
+        Order order = Order.builder()
+                .customer(customer)
+                .orderStatus(status)
+                .orderDate(LocalDateTime.now())
+                .subtotal(menuItem.getPrice())
+                .total(menuItem.getPrice())
+                .discountAmount(0.0)
+                .build();
+
+        orderRepository.save(order);
+
+        OrderItem item = OrderItem.builder()
+                .order(order)
+                .menuItem(menuItem)
+                .quantity(1)
+                .unitPrice(menuItem.getPrice())
+                .build();
+
+        orderItemRepository.save(item);
+    }*/
+
 }

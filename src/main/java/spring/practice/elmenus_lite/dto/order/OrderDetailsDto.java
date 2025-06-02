@@ -23,4 +23,5 @@ public class OrderDetailsDto {
     private Double subtotal;
     private Double discountAmount;
     private Double total;
+    private String paymentMethod;
 }

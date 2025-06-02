@@ -14,4 +14,4 @@ public interface OrderService {
 
     List<OrderDetailsDto> getRestaurantOrdersHistory(Long restaurantId);
 
-    }
+}

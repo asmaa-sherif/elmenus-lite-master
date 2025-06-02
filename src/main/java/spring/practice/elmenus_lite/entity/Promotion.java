@@ -22,8 +22,8 @@ public class Promotion {
     private Double discountPercent;
     private Double maxDiscount;
     private Boolean active;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
 }
 
 
