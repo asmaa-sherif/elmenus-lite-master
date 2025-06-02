@@ -1,9 +1,9 @@
 package spring.practice.elmenus_lite.service.order;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import spring.practice.elmenus_lite.dto.order.OrderDetailsDto;
 import spring.practice.elmenus_lite.dto.order.OrderSummaryDto;
-
-import java.util.List;
 
 
 public interface OrderService {
@@ -12,6 +12,6 @@ public interface OrderService {
 
     OrderSummaryDto getOrderSummary(Long orderId);
 
-    List<OrderDetailsDto> getRestaurantOrdersHistory(Long restaurantId);
+    Page<OrderSummaryDto> getRestaurantOrdersHistory(Long restaurantId, Pageable pageable);
 
 }

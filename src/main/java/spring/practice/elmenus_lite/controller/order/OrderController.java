@@ -3,17 +3,15 @@ package spring.practice.elmenus_lite.controller.order;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import spring.practice.elmenus_lite.dto.order.OrderDetailsDto;
 import spring.practice.elmenus_lite.dto.order.OrderSummaryDto;
 import spring.practice.elmenus_lite.service.order.OrderService;
-
-import java.util.List;
 
 import static spring.practice.elmenus_lite.common.ValidationMessages.INVALID_ID;
 
@@ -40,8 +38,12 @@ public class OrderController {
     }
 
     @GetMapping("/restaurant/{restaurantId}/history")
-    public ResponseEntity<List<OrderDetailsDto>> getRestaurantOrdersHistory(@PathVariable @Min(value = 1, message = INVALID_ID) Long restaurantId) {
-        return ResponseEntity.ok(orderService.getRestaurantOrdersHistory(restaurantId));
+    public ResponseEntity<Page<OrderSummaryDto>> getRestaurantOrdersHistory(@PathVariable @Min(value = 1, message = INVALID_ID) Long restaurantId,
+                                                                            @RequestParam(defaultValue = "0") @Min(value = 0, message = "Page number must be 0 or greater") int page,
+                                                                            @RequestParam(defaultValue = "10") @Min(value = 1, message = "Page size must be at least 1") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderSummaryDto> orderSummaries = orderService.getRestaurantOrdersHistory(restaurantId, pageable);
+        return ResponseEntity.ok(orderSummaries);
     }
 
 

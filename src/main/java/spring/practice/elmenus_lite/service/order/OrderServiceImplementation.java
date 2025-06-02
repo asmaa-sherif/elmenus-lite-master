@@ -2,6 +2,8 @@ package spring.practice.elmenus_lite.service.order;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.order.OrderDetailsDto;
 import spring.practice.elmenus_lite.dto.order.OrderSummaryDto;
@@ -86,7 +88,7 @@ public class OrderServiceImplementation implements OrderService {
     }
 
     @Override
-    public List<OrderDetailsDto> getRestaurantOrdersHistory(Long restaurantId) {
+    public Page<OrderSummaryDto> getRestaurantOrdersHistory(Long restaurantId, Pageable pageable) {
         // TODO: Implement method logic
         return null;
     }
