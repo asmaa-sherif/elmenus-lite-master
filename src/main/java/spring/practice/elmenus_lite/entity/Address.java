@@ -2,6 +2,7 @@ package spring.practice.elmenus_lite.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 
 @AllArgsConstructor
@@ -29,7 +30,8 @@ public class Address {
     private String state;
     private String country;
     private String zipCode;
-    private String location;
+    @Column(columnDefinition = "geography(Point,4326)")
+    private Point location;
     private Boolean isDefault;
 }
 
