@@ -1,6 +1,8 @@
 package spring.practice.elmenus_lite.service.menu;
 
 import spring.practice.elmenus_lite.dto.menu.MenuItemResponseDto;
+import spring.practice.elmenus_lite.entity.MenuItem;
+
 import java.util.List;
 
 public interface MenuItemService {
@@ -9,4 +11,5 @@ public interface MenuItemService {
     MenuItemResponseDto addMenuItem(MenuItemResponseDto menuItemDto);
     MenuItemResponseDto updateMenuItem(Long id, MenuItemResponseDto menuItemDto);
     void deleteMenuItem(Long id);
+    List<MenuItem> searchMenuItemsByName(String itemName);
 }

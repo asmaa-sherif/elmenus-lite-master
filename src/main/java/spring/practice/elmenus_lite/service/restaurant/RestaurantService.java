@@ -1,5 +1,6 @@
 package spring.practice.elmenus_lite.service.restaurant;
 
+import spring.practice.elmenus_lite.dto.restaurant.RestaurantRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface RestaurantService {
 
     List<RestaurantResponseDto> getAllRestaurants();
 
-    RestaurantResponseDto addRestaurant(RestaurantResponseDto restaurantDto);
+    RestaurantResponseDto addRestaurant(RestaurantRequestDto restaurantDto);
 
     RestaurantResponseDto updateRestaurant(Long id, RestaurantResponseDto restaurantDto);
 

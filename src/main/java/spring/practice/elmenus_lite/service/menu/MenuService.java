@@ -18,4 +18,6 @@ public interface MenuService {
     void deleteMenu(Long id);
 
     List<MenuResponseDto> getMenusByRestaurantId(Long restaurantId);
+
+    MenuResponseDto setMenuActiveStatus(Long id, boolean isActive);
 }

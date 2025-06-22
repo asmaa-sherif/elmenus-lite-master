@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     List<MenuItem> findByMenuMenuId(Long menuId);
+    List<MenuItem> findByItemNameContainingIgnoreCase(String itemName);
 
     // return only available items
     List<MenuItem> findByAvailableTrue();
+
 }

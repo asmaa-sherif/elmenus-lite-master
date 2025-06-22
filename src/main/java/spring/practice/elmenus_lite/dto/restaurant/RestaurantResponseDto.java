@@ -3,6 +3,8 @@ package spring.practice.elmenus_lite.dto.restaurant;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class RestaurantResponseDto {
