@@ -9,4 +9,5 @@ public interface RestaurantService {
 
     RestaurantResponseDto updateRestaurant(Long id, RestaurantRegisterRequestDto request);
 
+    void setActiveStatus(Long id, boolean isActive);
 }

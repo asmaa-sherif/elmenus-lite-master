@@ -85,6 +85,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantMapper.toDto(restaurant);
     }
 
+    @Transactional
+    @Override
+    public void setActiveStatus(Long id, boolean isActive) {
+        Restaurant restaurant = getRestaurant(id);
+        restaurant.setActive(isActive);
+    }
+
     private void updateRestaurantCategories(Restaurant restaurant, List<Category> categories) {
         restaurant.getRestaurantCategories().clear();
         restaurantCategoryRepository.deleteByRestaurant(restaurant);

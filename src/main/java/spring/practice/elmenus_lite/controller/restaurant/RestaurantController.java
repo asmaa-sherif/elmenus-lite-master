@@ -45,4 +45,11 @@ public class RestaurantController {
         RestaurantResponseDto response = restaurantService.updateRestaurant(id, restaurantRegisterRequestDto);
         return ResponseEntity.ok(new BaseResponse<>(true, UPDATED_SUCCESSFULLY.getMessage(), response));
     }
+
+    @PutMapping("/status/{id}")
+    public ResponseEntity<BaseResponse<Void>> toggleStatus(@PathVariable @Min(value = 1, message = INVALID_ID) Long id, @RequestParam boolean isActive) {
+        restaurantService.setActiveStatus(id, isActive);
+        return ResponseEntity.ok(new BaseResponse<>(true, UPDATED_SUCCESSFULLY.getMessage(), null));
+    }
+
 }
