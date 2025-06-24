@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
@@ -105,6 +106,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepository.searchByRestaurantNameOrCategoryName(keyword.toLowerCase(), pageable)
                 .map(restaurantMapper::toDto);
     }
+
+    @Override
+    public List<RestaurantResponseDto> getTopRestaurants(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Restaurant> restaurants = restaurantRepository.findTopRatedActiveRestaurants(pageable);
+        return restaurants.stream().map(restaurantMapper::toDto).toList();
+    }
+
 
     private void updateRestaurantCategories(Restaurant restaurant, List<Category> categories) {
         restaurant.getRestaurantCategories().clear();
@@ -277,9 +286,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private void addCategoriesToRestaurant(Restaurant restaurant, List<Category> categories) {
         if (categories != null && !categories.isEmpty()) {
-            Set<RestaurantCategory> restaurantCategories = categories.stream()
+            List<RestaurantCategory> restaurantCategories = categories.stream()
                     .map(category -> new RestaurantCategory(restaurant, category))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             restaurant.setRestaurantCategories(restaurantCategories);
         }
     }

@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 
+import java.util.List;
+
 public interface RestaurantService {
 
     RestaurantResponseDto registerRestaurant(RestaurantRegisterRequestDto request);
@@ -16,4 +18,6 @@ public interface RestaurantService {
     Page<RestaurantResponseDto> viewAllRestaurants(Pageable pageable);
 
     Page<RestaurantResponseDto> searchRestaurants(String keyword, Pageable pageable);
+
+    List<RestaurantResponseDto> getTopRestaurants(int limit);
 }

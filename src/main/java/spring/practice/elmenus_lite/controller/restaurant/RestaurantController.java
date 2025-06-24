@@ -15,6 +15,8 @@ import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 import spring.practice.elmenus_lite.service.restaurant.RestaurantService;
 
+import java.util.List;
+
 import static spring.practice.elmenus_lite.common.ValidationMessages.INVALID_ID;
 import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
@@ -66,6 +68,14 @@ public class RestaurantController {
         log.info("Received restaurant list with keyword request: {}", pageable);
 
         Page<RestaurantResponseDto> list = restaurantService.searchRestaurants(keyword, pageable);
+        return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<BaseResponse<List<RestaurantResponseDto>>> getTopRestaurants(@RequestParam(defaultValue = "5") int limit) {
+        log.info("Received top restaurant request: {}", limit);
+
+        List<RestaurantResponseDto> list = restaurantService.getTopRestaurants(limit);
         return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
     }
 

@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import spring.practice.elmenus_lite.entity.AbstractEntity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +29,9 @@ public class Restaurant extends AbstractEntity {
     private RestaurantDetails restaurantDetails;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<RestaurantCategory> restaurantCategories = new HashSet<>();
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "restaurant")
+    private List<RestaurantCategory> restaurantCategories;
 
 }

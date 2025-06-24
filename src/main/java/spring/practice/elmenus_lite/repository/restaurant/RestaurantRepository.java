@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import spring.practice.elmenus_lite.entity.restaurant.Restaurant;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,6 +28,15 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
                    OR LOWER(c.categoryName) LIKE LOWER(CONCAT('%', :keyword, '%'))
             """)
     Page<Restaurant> searchByRestaurantNameOrCategoryName(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("""
+                SELECT r FROM Restaurant r
+                JOIN r.reviews v
+                WHERE r.active = true
+                GROUP BY r
+                ORDER BY AVG(v.rating) DESC
+            """)
+    List<Restaurant> findTopRatedActiveRestaurants(Pageable pageable);
 
 
 }
