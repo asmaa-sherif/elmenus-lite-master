@@ -2,6 +2,7 @@ package spring.practice.elmenus_lite.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import spring.practice.elmenus_lite.entity.restaurant.Restaurant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -10,7 +11,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "menu")
-public class Menu extends AbstractEntity{
+public class Menu extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
