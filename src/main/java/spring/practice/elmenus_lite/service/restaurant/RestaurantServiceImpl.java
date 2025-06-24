@@ -18,6 +18,7 @@ import spring.practice.elmenus_lite.entity.restaurant.RestaurantDetails;
 import spring.practice.elmenus_lite.handlerException.BusinessException;
 import spring.practice.elmenus_lite.mapper.RestaurantMapper;
 import spring.practice.elmenus_lite.repository.restaurant.CategoryRepository;
+import spring.practice.elmenus_lite.repository.restaurant.RestaurantCategoryRepository;
 import spring.practice.elmenus_lite.repository.restaurant.RestaurantDetailsRepository;
 import spring.practice.elmenus_lite.repository.restaurant.RestaurantRepository;
 
@@ -27,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +42,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final CategoryRepository categoryRepository;
     private final RestaurantDetailsRepository restaurantDetailsRepository;
+    private final RestaurantCategoryRepository restaurantCategoryRepository;
     private final RestaurantMapper restaurantMapper;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
@@ -66,10 +69,49 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Transactional
-    public RestaurantResponseDto getRestaurantById(Long id) {
-        Restaurant restaurant = restaurantRepository.findByIdWithDetailsAndCategories(id)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + id));
+    @Override
+    public RestaurantResponseDto updateRestaurant(Long id, RestaurantRegisterRequestDto request) {
+        Restaurant restaurant = getRestaurant(id);
+
+        validateRestaurantNameUniquenessForUpdate(request.getRestaurantName(), id);
+        validateBusinessHours(request.getOpenTime(), request.getCloseTime());
+        validateDeliveryTimeFormat(request.getEstimatedDeliveryTime());
+        List<Category> categories = validateAndGetCategories(request.getCategoryIds());
+
+        restaurant.setRestaurantName(request.getRestaurantName());
+        updateNewRestaurantDetails(request, restaurant);
+        updateRestaurantCategories(restaurant, categories);
+
         return restaurantMapper.toDto(restaurant);
+    }
+
+    private void updateRestaurantCategories(Restaurant restaurant, List<Category> categories) {
+        restaurant.getRestaurantCategories().clear();
+        restaurantCategoryRepository.deleteByRestaurant(restaurant);
+        addCategoriesToRestaurant(restaurant, categories);
+
+    }
+
+    private void updateNewRestaurantDetails(RestaurantRegisterRequestDto request, Restaurant restaurant) {
+        RestaurantDetails details = restaurant.getRestaurantDetails();
+        if (details == null) {
+            details = new RestaurantDetails();
+            details.setRestaurant(restaurant);
+        }
+
+        RestaurantDetails updatedDetails = buildRestaurantDetails(restaurant, request);
+        details.setDescription(updatedDetails.getDescription());
+        details.setPhone(updatedDetails.getPhone());
+        details.setEstimatedDeliveryTime(updatedDetails.getEstimatedDeliveryTime());
+        details.setOpenTime(updatedDetails.getOpenTime());
+        details.setCloseTime(updatedDetails.getCloseTime());
+        details.setLocation(updatedDetails.getLocation());
+        restaurantDetailsRepository.save(details);
+    }
+
+    private Restaurant getRestaurant(Long id) {
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found: " + id));
     }
 
     private void validateRestaurantRequest(RestaurantRegisterRequestDto request) {
@@ -81,6 +123,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     private void validateRestaurantNameUniqueness(String restaurantName) {
         if (restaurantRepository.existsByRestaurantNameIgnoreCase(restaurantName)) {
             throw new BusinessException("Restaurant name already exists: " + restaurantName);
+        }
+    }
+
+    private void validateRestaurantNameUniquenessForUpdate(String name, Long id) {
+        Optional<Restaurant> existing = restaurantRepository.findByRestaurantNameIgnoreCase(name);
+        if (existing.isPresent() && !existing.get().getRestaurantId().equals(id)) {
+            throw new IllegalArgumentException("Another restaurant already uses the name: " + name);
         }
     }
 
@@ -156,7 +205,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private RestaurantDetails createAndSaveRestaurantDetails(Restaurant restaurant, RestaurantRegisterRequestDto request) {
         RestaurantDetails details = buildRestaurantDetails(restaurant, request);
-        log.info("DETAILS: " + details.getEstimatedDeliveryTime());
         return restaurantDetailsRepository.save(details);
     }
 

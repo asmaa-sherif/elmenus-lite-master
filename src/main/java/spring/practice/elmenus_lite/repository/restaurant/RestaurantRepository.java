@@ -13,6 +13,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     boolean existsByRestaurantNameIgnoreCase(String restaurantName);
 
+    Optional<Restaurant> findByRestaurantNameIgnoreCase(String restaurantName);
+
     @Query("SELECT r FROM Restaurant r " +
             "LEFT JOIN FETCH r.restaurantDetails " +
             "LEFT JOIN FETCH r.restaurantCategories rc " +

@@ -2,20 +2,25 @@ package spring.practice.elmenus_lite.controller.restaurant;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import spring.practice.elmenus_lite.dto.BaseResponse;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 import spring.practice.elmenus_lite.service.restaurant.RestaurantService;
 
+import static spring.practice.elmenus_lite.common.ValidationMessages.INVALID_ID;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.ADDED_SUCCESSFULLY;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.UPDATED_SUCCESSFULLY;
+
 @Log4j2
 @RestController
 @RequestMapping("/api/v1/restaurants")
+@Validated
 @Tag(name = "Restaurants Management", description = "Endpoints for managing restaurants, including registering, ")
 public class RestaurantController {
 
@@ -27,9 +32,17 @@ public class RestaurantController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RestaurantResponseDto> register(@RequestBody @Valid RestaurantRegisterRequestDto restaurantRegisterRequestDto) {
+    public ResponseEntity<BaseResponse<RestaurantResponseDto>> register(@RequestBody @Valid RestaurantRegisterRequestDto restaurantRegisterRequestDto) {
         log.info("Received restaurant registration request for: {}", restaurantRegisterRequestDto.getRestaurantName());
         RestaurantResponseDto response = restaurantService.registerRestaurant(restaurantRegisterRequestDto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new BaseResponse<>(true, ADDED_SUCCESSFULLY.getMessage(), response));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BaseResponse<RestaurantResponseDto>> updateRestaurant(@PathVariable @Min(value = 1, message = INVALID_ID) Long id,
+                                                                                @Valid @RequestBody RestaurantRegisterRequestDto restaurantRegisterRequestDto) {
+        log.info("Received restaurant update request for: {}", restaurantRegisterRequestDto.getRestaurantName());
+        RestaurantResponseDto response = restaurantService.updateRestaurant(id, restaurantRegisterRequestDto);
+        return ResponseEntity.ok(new BaseResponse<>(true, UPDATED_SUCCESSFULLY.getMessage(), response));
     }
 }

@@ -20,16 +20,16 @@ public class Restaurant extends AbstractEntity {
     @Column(name = "restaurant_id")
     private Long restaurantId;
 
-    @Column(name = "restaurant_name", nullable = false, unique = true, length = 100)
+    @Column(name = "restaurant_name", nullable = false, unique = true)
     private String restaurantName;
 
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "restaurant")
     private RestaurantDetails restaurantDetails;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurant")
     private Set<RestaurantCategory> restaurantCategories = new HashSet<>();
 
 }

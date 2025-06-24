@@ -7,4 +7,6 @@ public interface RestaurantService {
 
     RestaurantResponseDto registerRestaurant(RestaurantRegisterRequestDto request);
 
+    RestaurantResponseDto updateRestaurant(Long id, RestaurantRegisterRequestDto request);
+
 }
