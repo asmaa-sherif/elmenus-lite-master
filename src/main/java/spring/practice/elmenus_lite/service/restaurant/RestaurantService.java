@@ -20,4 +20,6 @@ public interface RestaurantService {
     Page<RestaurantResponseDto> searchRestaurants(String keyword, Pageable pageable);
 
     List<RestaurantResponseDto> getTopRestaurants(int limit);
+
+    List<RestaurantResponseDto> getRecommendedRestaurants(Long customerId, int limit);
 }

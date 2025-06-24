@@ -20,6 +20,7 @@ import spring.practice.elmenus_lite.entity.restaurant.RestaurantCategory;
 import spring.practice.elmenus_lite.entity.restaurant.RestaurantDetails;
 import spring.practice.elmenus_lite.handlerException.BusinessException;
 import spring.practice.elmenus_lite.mapper.RestaurantMapper;
+import spring.practice.elmenus_lite.repository.CustomerRepository;
 import spring.practice.elmenus_lite.repository.restaurant.CategoryRepository;
 import spring.practice.elmenus_lite.repository.restaurant.RestaurantCategoryRepository;
 import spring.practice.elmenus_lite.repository.restaurant.RestaurantDetailsRepository;
@@ -46,6 +47,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final CategoryRepository categoryRepository;
     private final RestaurantDetailsRepository restaurantDetailsRepository;
     private final RestaurantCategoryRepository restaurantCategoryRepository;
+    private final CustomerRepository customerRepository;
     private final RestaurantMapper restaurantMapper;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
@@ -112,6 +114,18 @@ public class RestaurantServiceImpl implements RestaurantService {
         Pageable pageable = PageRequest.of(0, limit);
         List<Restaurant> restaurants = restaurantRepository.findTopRatedActiveRestaurants(pageable);
         return restaurants.stream().map(restaurantMapper::toDto).toList();
+    }
+
+    @Override
+    public List<RestaurantResponseDto> getRecommendedRestaurants(Long customerId, int limit) {
+        if (!customerRepository.existsById(customerId)) {
+            throw new EntityNotFoundException("Customer not found: " + customerId);
+        }
+        List<Restaurant> previousOrderedRestaurant = restaurantRepository.findPreviouslyOrderedRestaurantsByCustomer(customerId);
+        if (previousOrderedRestaurant != null && !previousOrderedRestaurant.isEmpty()) {
+            return previousOrderedRestaurant.stream().limit(limit).map(restaurantMapper::toDto).toList();
+        }
+        return getTopRestaurants(limit);
     }
 
 

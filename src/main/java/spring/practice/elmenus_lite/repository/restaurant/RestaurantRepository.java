@@ -38,6 +38,15 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
             """)
     List<Restaurant> findTopRatedActiveRestaurants(Pageable pageable);
 
+    @Query("""
+                SELECT DISTINCT m.restaurant FROM Order o
+                              JOIN o.orderItems oi
+                              JOIN oi.menuItem mi
+                              JOIN mi.menu m
+                WHERE o.customer.customerId = :customerId AND m.restaurant.active = true
+            """)
+    List<Restaurant> findPreviouslyOrderedRestaurantsByCustomer(@Param("customerId") Long customerId);
+
 
 }
 

@@ -79,5 +79,14 @@ public class RestaurantController {
         return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
     }
 
+    @GetMapping("/recommended")
+    public ResponseEntity<BaseResponse<List<RestaurantResponseDto>>> getRecommendedRestaurants(@RequestParam @Min(value = 1, message = INVALID_ID) Long customerId,
+                                                                                               @RequestParam(defaultValue = "5") int limit) {
+        log.info("Received recommended restaurants request: {}", limit);
+
+        List<RestaurantResponseDto> list = restaurantService.getRecommendedRestaurants(customerId, limit);
+        return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
+    }
+
 
 }
