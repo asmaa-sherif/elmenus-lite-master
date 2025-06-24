@@ -11,6 +11,7 @@ public enum SuccessAndErrorMessage {
     SUCCESS("Success"),
     UPDATED_SUCCESSFULLY("Updated successfully"),
     ADDED_SUCCESSFULLY("Added successfully"),
+    RETRIEVED_SUCCESSFULLY("Retrieved successfully"),
     QUANTITY_UPDATED_SUCCESSFULLY("Quantity updated successfully"),
     CART_ITEM_ADDED_SUCCESSFULLY("Cart item added successfully"),
     CART_ITEM_DELETED_SUCCESSFULLY("Cart item deleted successfully"),

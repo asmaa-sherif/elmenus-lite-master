@@ -8,6 +8,8 @@ import lombok.extern.log4j.Log4j2;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
@@ -90,6 +92,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void setActiveStatus(Long id, boolean isActive) {
         Restaurant restaurant = getRestaurant(id);
         restaurant.setActive(isActive);
+    }
+
+    @Override
+    public Page<RestaurantResponseDto> viewAllRestaurants(Pageable pageable) {
+        return restaurantRepository.findAllByActiveTrue(pageable)
+                .map(restaurantMapper::toDto);
     }
 
     private void updateRestaurantCategories(Restaurant restaurant, List<Category> categories) {

@@ -68,7 +68,7 @@ public interface RestaurantMapper {
     }
 
     default String formatIntervalToString(String intervalStr) {
-        if (intervalStr.startsWith("PT")) {
+        if (intervalStr != null && intervalStr.startsWith("PT")) {
             if (intervalStr.contains("H") && intervalStr.contains("M")) {
                 String hours = intervalStr.substring(2, intervalStr.indexOf("H"));
                 String minutes = intervalStr.substring(intervalStr.indexOf("H") + 1, intervalStr.indexOf("M"));

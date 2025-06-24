@@ -1,5 +1,7 @@
 package spring.practice.elmenus_lite.service.restaurant;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 
@@ -10,4 +12,6 @@ public interface RestaurantService {
     RestaurantResponseDto updateRestaurant(Long id, RestaurantRegisterRequestDto request);
 
     void setActiveStatus(Long id, boolean isActive);
+
+    Page<RestaurantResponseDto> viewAllRestaurants(Pageable pageable);
 }

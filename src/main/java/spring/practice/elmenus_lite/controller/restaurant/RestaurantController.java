@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,7 @@ import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
 import spring.practice.elmenus_lite.service.restaurant.RestaurantService;
 
 import static spring.practice.elmenus_lite.common.ValidationMessages.INVALID_ID;
-import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.ADDED_SUCCESSFULLY;
-import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.UPDATED_SUCCESSFULLY;
+import static spring.practice.elmenus_lite.enums.SuccessAndErrorMessage.*;
 
 @Log4j2
 @RestController
@@ -51,5 +52,14 @@ public class RestaurantController {
         restaurantService.setActiveStatus(id, isActive);
         return ResponseEntity.ok(new BaseResponse<>(true, UPDATED_SUCCESSFULLY.getMessage(), null));
     }
+
+    @GetMapping
+    public ResponseEntity<BaseResponse<Page<RestaurantResponseDto>>> getRestaurants(Pageable pageable) {
+        log.info("Received restaurant list request: {}", pageable);
+
+        Page<RestaurantResponseDto> list = restaurantService.viewAllRestaurants(pageable);
+        return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
+    }
+
 
 }
