@@ -61,5 +61,13 @@ public class RestaurantController {
         return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<BaseResponse<Page<RestaurantResponseDto>>> search(@RequestParam String keyword, Pageable pageable) {
+        log.info("Received restaurant list with keyword request: {}", pageable);
+
+        Page<RestaurantResponseDto> list = restaurantService.searchRestaurants(keyword, pageable);
+        return ResponseEntity.ok(new BaseResponse<>(true, RETRIEVED_SUCCESSFULLY.getMessage(), list));
+    }
+
 
 }

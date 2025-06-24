@@ -100,6 +100,12 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .map(restaurantMapper::toDto);
     }
 
+    @Override
+    public Page<RestaurantResponseDto> searchRestaurants(String keyword, Pageable pageable) {
+        return restaurantRepository.searchByRestaurantNameOrCategoryName(keyword.toLowerCase(), pageable)
+                .map(restaurantMapper::toDto);
+    }
+
     private void updateRestaurantCategories(Restaurant restaurant, List<Category> categories) {
         restaurant.getRestaurantCategories().clear();
         restaurantCategoryRepository.deleteByRestaurant(restaurant);

@@ -14,4 +14,6 @@ public interface RestaurantService {
     void setActiveStatus(Long id, boolean isActive);
 
     Page<RestaurantResponseDto> viewAllRestaurants(Pageable pageable);
+
+    Page<RestaurantResponseDto> searchRestaurants(String keyword, Pageable pageable);
 }
