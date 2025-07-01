@@ -7,7 +7,10 @@ import spring.practice.elmenus_lite.entity.*;
 import spring.practice.elmenus_lite.enums.Gender;
 import spring.practice.elmenus_lite.repository.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import spring.practice.elmenus_lite.enums.OrderStatusEnum;
 
 @Component
 @AllArgsConstructor
@@ -19,7 +22,10 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final MenuItemRepository menuItemRepository;
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
-   
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final OrderStatusRepository orderStatusRepository;
+    private final AddressRepository addressRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -213,6 +219,85 @@ public class DatabaseInitializer implements CommandLineRunner {
                 }
 
             }
+
+        }
+
+
+        if (orderRepository.count() == 0) {
+            Customer customer = customerRepository.findByUserUserId(2L);
+            User user = userRepository.findById(2L).orElseThrow(() -> new RuntimeException("User not found"));
+            MenuItem menuItem1 = menuItemRepository.findById(1L).orElseThrow(() -> new RuntimeException("MenuItem not found"));
+            MenuItem menuItem2 = menuItemRepository.findById(2L).orElseThrow(() -> new RuntimeException("MenuItem not found"));
+            MenuItem menuItem3 = menuItemRepository.findById(3L).orElseThrow(() -> new RuntimeException("MenuItem not found"));
+
+            // PENDING, Confirmed, Preparing, Ready, PickedUp, DELIVERED, CANCELLED, FAILED, Refunded;
+            OrderStatus pending = new OrderStatus(OrderStatusEnum.PENDING.name());
+            OrderStatus Confirmed = new OrderStatus(OrderStatusEnum.Confirmed.name());
+            OrderStatus Preparing = new OrderStatus(OrderStatusEnum.Preparing.name());
+            OrderStatus Ready = new OrderStatus(OrderStatusEnum.Ready.name());
+            OrderStatus PickedUp = new OrderStatus(OrderStatusEnum.PickedUp.name());
+            OrderStatus DELIVERED = new OrderStatus(OrderStatusEnum.DELIVERED.name());
+            OrderStatus CANCELLED = new OrderStatus(OrderStatusEnum.CANCELLED.name());
+            OrderStatus FAILED = new OrderStatus(OrderStatusEnum.FAILED.name());
+            OrderStatus Refunded = new OrderStatus(OrderStatusEnum.Refunded.name());
+            orderStatusRepository.saveAll(List.of(pending, Confirmed, Preparing, Ready, PickedUp, DELIVERED, CANCELLED, FAILED, Refunded));
+
+            Address address1 = Address.builder()
+                    .customer(customer)
+                    .label("Home")
+                    .street("123 Main St")
+                    .city("Cairo")
+                    .floor("1st")
+                    .apartment("101")
+                    .additionalDirection("Near the park")
+                    .state("Cairo")
+                    .country("Egypt")
+                    .zipCode("12345")
+                    .isDefault(true)
+                    .build();
+
+            addressRepository.save(address1);
+
+            Order order1 = new Order();
+//            order1.setOrderId(1L);
+            order1.setCustomer(customer);
+            order1.setAddress(address1);
+            order1.setOrderStatus(pending);
+            order1.setPromotion(null);
+            order1.setDiscountAmount(0.0);
+            order1.setSubtotal(100.0);
+            order1.setTotal(100.0);
+            order1.setOrderDate(java.time.LocalDateTime.now());
+
+            OrderItem orderItem1 = OrderItem.builder()
+                    .order(order1)
+                    .menuItem(menuItem1)
+                    .unitPrice(1.0)
+                    .quantity(5)
+                    .build();
+            OrderItem orderItem2 = OrderItem.builder()
+                    .order(order1)
+                    .menuItem(menuItem2)
+                    .unitPrice(5.0)
+                    .quantity(3)
+                    .build();
+            OrderItem orderItem3 = OrderItem.builder()
+                    .order(order1)
+                    .menuItem(menuItem3)
+                    .unitPrice(10.0)
+                    .quantity(1)
+                    .build();
+            orderRepository.save(order1);
+            orderItemRepository.saveAll(List.of(orderItem1, orderItem2, orderItem3));
+
+            List<OrderItem> orderItemList = new ArrayList<>();
+            orderItemList.add(orderItem1);
+            orderItemList.add(orderItem2);
+            orderItemList.add(orderItem3);
+            order1.setItems(orderItemList);
+            orderRepository.save(order1);
+
+
 
         }
 
