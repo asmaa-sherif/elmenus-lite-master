@@ -42,6 +42,6 @@ public class Order {
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> items = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
 }
 

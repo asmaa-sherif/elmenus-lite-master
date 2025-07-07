@@ -1,17 +1,25 @@
 package spring.practice.elmenus_lite.service.restaurant;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import spring.practice.elmenus_lite.dto.restaurant.RestaurantRegisterRequestDto;
 import spring.practice.elmenus_lite.dto.restaurant.RestaurantResponseDto;
+
 import java.util.List;
 
 public interface RestaurantService {
 
-    RestaurantResponseDto getRestaurantById(Long id);
+    RestaurantResponseDto registerRestaurant(RestaurantRegisterRequestDto request);
 
-    List<RestaurantResponseDto> getAllRestaurants();
+    RestaurantResponseDto updateRestaurant(Long id, RestaurantRegisterRequestDto request);
 
-    RestaurantResponseDto addRestaurant(RestaurantResponseDto restaurantDto);
+    void setActiveStatus(Long id, boolean isActive);
 
-    RestaurantResponseDto updateRestaurant(Long id, RestaurantResponseDto restaurantDto);
+    Page<RestaurantResponseDto> viewAllRestaurants(Pageable pageable);
 
-    void deleteRestaurant(Long id);
+    Page<RestaurantResponseDto> searchRestaurants(String keyword, Pageable pageable);
+
+    List<RestaurantResponseDto> getTopRestaurants(int limit);
+
+    List<RestaurantResponseDto> getRecommendedRestaurants(Long customerId, int limit);
 }

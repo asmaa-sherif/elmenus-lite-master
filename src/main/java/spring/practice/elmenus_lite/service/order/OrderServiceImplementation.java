@@ -63,7 +63,7 @@ public class OrderServiceImplementation implements OrderService {
     }
 
     private static List<OrderItem> getOrderItems(Order order) {
-        return order.getItems();
+        return order.getOrderItems();
     }
 
     private static String getCustomerName(Order order) {
